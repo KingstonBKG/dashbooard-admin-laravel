@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\tontiflex\user\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\dashboard\Analytics;
 use App\Http\Controllers\layouts\WithoutMenu;
@@ -43,9 +45,123 @@ use App\Http\Controllers\form_elements\InputGroups;
 use App\Http\Controllers\form_layouts\VerticalForm;
 use App\Http\Controllers\form_layouts\HorizontalForm;
 use App\Http\Controllers\tables\Basic as TablesBasic;
+use App\Http\Controllers\tontiflex\auth\forgotpasswordController;
+use App\Http\Controllers\tontiflex\auth\loginController;
+use App\Http\Controllers\tontiflex\auth\registerController;
+use App\Http\Controllers\tontiflex\dashboard\AnalyticsController;
+use App\Http\Controllers\tontiflex\invitation\InvitationController;
+use App\Http\Controllers\tontiflex\settings\SettingsController;
+use App\Http\Controllers\tontiflex\tontine\TontineController;
+use App\Http\Controllers\tontiflex\tontineview\TontineViewController;
+use App\Http\Controllers\tontiflex\wallet\WalletController;
 
-// Main Page Route
-Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
+// Tontiflex
+
+Route::get('/', [AnalyticsController::class, 'index'])->name('dashboard-analytics'); // Main Page Route
+
+
+// Routes publiques
+Route::middleware('guest')->group(function () {
+    Route::prefix('/auth')->group(function () {
+        Route::get('/login', [loginController::class, 'index'])->name('auth-login');
+        Route::post('/login', [loginController::class, 'login'])->name('auth.login');
+        Route::get('/register', [registerController::class, 'index'])->name('auth-register');
+        Route::post('/register', [registerController::class, 'register'])->name('auth.register');
+        Route::get('/forgot-password', [forgotpasswordController::class, 'index'])->name('auth-forgot-password');
+    });
+});
+
+// Routes protégées
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get('/', [AnalyticsController::class, 'index'])->name('dashboard-analytics');
+
+    Route::prefix('user')->group(function () {
+        Route::get('/update/{id}', [UserController::class, 'index'])->name('user-update');
+        Route::put('/update/{id}', [UserController::class, 'update'])->name('user.update');
+    });
+
+
+    Route::prefix('/dashboard')->group(function () {
+        Route::get('/analytics', [AnalyticsController::class, 'index'])->name('dashboard-analytics');
+    });
+
+    Route::prefix('/account')->group(function () {
+        Route::get('/settings-account', [SettingsController::class, 'account'])->name('account-settings-account');
+        Route::put('/settings-account/{id}', [SettingsController::class, 'update'])->name('account.settings.account.update');
+
+        Route::get('/settings-notifications', [SettingsController::class, 'notification'])->name('account-settings-notifications');
+        Route::put('/settings-notifications/{id}', [SettingsController::class, 'updatenotificationauthorization'])->name('account.settings.notifications');
+        
+        Route::get('/settings-connections', [SettingsController::class, 'connection'])->name('account-settings-connections');
+
+        Route::get('/user/wallet', [SettingsController::class, 'wallet'])->name('account-settings-wallet');
+        Route::put('/settings-wallet/{id}', [SettingsController::class, 'walletupdate'])->name('account.settings.wallet.walletupdate');
+
+    });
+
+
+    Route::prefix('/tontines')->group(function () {
+        Route::get('/dashboard', [TontineController::class, 'index'])->name('tontines-dashboard');;
+        Route::get('/tontines', [TontineController::class, 'tontinecreatevew'])->name('tontines-tontines');;
+        Route::put('/tontines/{id}', [TontineController::class, 'update'])->name('tontines-modify');;
+
+        Route::get('/archived', [TontineController::class, 'archived'])->name('tontines-archived');
+        Route::post('/restore/{id}', [TontineController::class, 'restore'])->name('tontines.restore');
+        Route::post('/forcedelete/{id}', [TontineController::class, 'deletePermanentlyTontine'])->name('tontines.forcedelete');
+
+        Route::delete('/tontines/{id}', [TontineController::class, 'destroy'])->name('tontine.destroy');
+        Route::get('/tontines/{id}', [TontineController::class, 'tontinecreatevew'])->name('tontine-destroy');
+
+        Route::post('/', [TontineController::class, 'store'])->name('my.tontine');
+    });
+
+    // Route de déconnexion
+    Route::prefix('/auth')->group(function () {
+        Route::get('/logout', [AuthController::class, 'logout'])->name('auth-logout');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+    });
+
+    // Route de Invitations
+    Route::prefix('/invitations')->group(function () {
+        Route::get('/dashboard', [InvitationController::class, 'index'])->name('invitations-dashboard');
+        Route::get('/mes-invitations', [InvitationController::class, 'invitations'])->name('invitations-mes-invitations');
+        Route::post('/mes-invitations', [TontineController::class, 'addMemberToTontine'])->name('invitations.mes.invitations');
+        
+        
+        Route::post('/refuse-invitation/{id}', [InvitationController::class, 'refuse'])->name('invitations.refuse.invitations');
+
+        
+
+        Route::post('/{id}', [InvitationController::class, 'store'])->name('invitations.send');
+    });
+
+    Route::prefix('/user')->name('wallet.')->group(function (){
+        Route::resource('wallet',WalletController::class);
+    });
+
+    Route::prefix('/tontine-view')->group(function () {
+        Route::get('{id}/main', [TontineController::class, 'show'])->name('tontine-view-main');
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//analytics
+
+Route::get('/dashbord/analytics', [Analytics::class, 'index'])->name('dashboard-analytic');
+
 
 // layout
 Route::get('/layouts/without-menu', [WithoutMenu::class, 'index'])->name('layouts-without-menu');

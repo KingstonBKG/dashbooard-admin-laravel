@@ -1,0 +1,64 @@
+{
+  "menu": [
+    {
+      "url": "/",
+      "name": "Dashboards",
+      "icon": "menu-icon tf-icons bx bx-home-smile",
+      "slug": "dashboard-analytics",
+      "badge": [
+        "danger",
+        "1"
+      ]
+    },
+    {
+      "name": "Tontines",
+      "icon": "menu-icon tf-icons bx bx-group",
+      "slug": "tontines",
+      "submenu": [
+        {
+          "url": "/tontines/dashboard",
+          "name": "dashboard",
+          "icon": "menu-icon tf-icons bx bx-chart",
+          "slug": "tontines-dashboard"
+        },
+        {
+          "url": "/tontines/tontines",
+          "name": "tontines",
+          "icon": "menu-icon tf-icons bx bx-group",
+          "slug": "tontines-tontines"
+        },
+        {
+          "url": "/tontines/archived",
+          "name": "archives",
+          "icon": "menu-icon tf-icons bx bx-trash",
+          "slug": "tontines-archived"
+        }
+      ]
+    },
+    {
+      "name": "Invitations",
+      "icon": "menu-icon tf-icons bx bx-envelope",
+      "slug": "invitations",
+      "submenu": [
+        {
+          "url": "/invitations/dashboard",
+          "name": "dashboard",
+          "icon": "menu-icon tf-icons bx bx-chart",
+          "slug": "invitations-dashboard"
+        },
+        {
+          "url": "/invitations/mes-invitations",
+          "name": "mes invitations",
+          "icon": "menu-icon tf-icons bx bx-envelope",
+          "slug": "invitations-mes-invitations"
+        }
+      ]
+    },
+    {
+      "url": "/user/wallet",
+      "name": "Portefeuilles",
+      "icon": "menu-icon tf-icons bx bx-money",
+      "slug": "invitations"
+    }
+  ]
+}

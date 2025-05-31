@@ -6,10 +6,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-  use HasFactory, Notifiable;
+  use HasFactory, Notifiable, HasApiTokens;
 
   /**
    * The attributes that are mass assignable.
@@ -17,9 +18,18 @@ class User extends Authenticatable
    * @var array<int, string>
    */
   protected $fillable = [
-    'name',
+    'username',
     'email',
     'password',
+    'image',
+    'organization',
+    'phoneNumber',
+    'address',
+    'country',
+    'language',
+    'timeZones',
+    'currency',
+    'authorize_notification'
   ];
 
   /**
@@ -44,4 +54,29 @@ class User extends Authenticatable
       'password' => 'hashed',
     ];
   }
+
+  public function tontines()
+  {
+    return $this->belongsToMany(Tontine::class, 'tontine_user', 'user_id')->withTimestamps()->withPivot('role');
+  }
+
+  public function tontinesAdmin()
+  {
+    return $this->hasMany(Tontine::class, 'admin_id');
+  }
+
+  public function wallets()
+  {
+    return $this->hasMany(Wallet::class);
+  }
+
+  public function hasRole($tontineId, $role){
+    return $this->tontines()->where('tontine_id', $tontineId)->where('role', $role)->exists();
+  }
+
+  public function assignRole($tontineId, $role){
+    $this->tontines()->attach($tontineId, ['role' => $role]);
+  }
+
+  
 }

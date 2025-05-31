@@ -1,5 +1,8 @@
 <?php
 
+use App\Providers\AuthServiceProvider;
+use App\Providers\RepositoryServiceProvider;
+
 return [
 
   /*
@@ -122,5 +125,10 @@ return [
     'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
     'store' => env('APP_MAINTENANCE_STORE', 'database'),
   ],
+
+  'provider' => [
+    RepositoryServiceProvider::class,
+    AuthServiceProvider::class
+  ]
 
 ];

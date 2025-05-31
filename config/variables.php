@@ -1,10 +1,11 @@
 <?php
   // Variables
   return [
-    "creatorName" => "ThemeSelection",
-    "creatorUrl" => "https://themeselection.com",
+    "appName" => "tontiflex",
+    "creatorName" => "Dream Team Record",
+    "creatorUrl" => "https://jvtgescol.cm/DTRWEBSITE/index.html",
     "templateName" => "sneat",
-    "templateSuffix" => "Bootstrap Dashboard FREE",
+    "templateSuffix" => "Bootstrap Dashboard",
     "templateVersion" => "2.0.0",
     "templateFree" => true,
     "templateDescription" => "Most Powerful & Comprehensive Bootstrap 5 HTML Admin Dashboard Template built for developers!",

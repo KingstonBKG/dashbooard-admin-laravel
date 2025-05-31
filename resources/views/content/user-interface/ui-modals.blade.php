@@ -390,7 +390,7 @@
             Small
           </button>
 
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#<i class="bx bxl-react bx-md text-info me-4"></i>">
             Large
           </button>
 
