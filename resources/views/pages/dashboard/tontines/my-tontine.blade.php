@@ -573,39 +573,114 @@
 @foreach ($tontines as $tontine)
 <div class="modal fade detail-modal" id="detailsTontineModal{{ $tontine->id }}" tabindex="-1"
     role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-primary justify-content-between">
-                <h5 class="modal-title text-white">
-                    <i class="anticon anticon-info-circle"></i> Détails de la tontine
-                    #{{ $tontine->name }}
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+   
+    
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header bg-primary justify-content-between">
+            <h5 class="modal-title text-white">
+                <i class="anticon anticon-info-circle"></i> Détails de la tontine
+                <span class="highlight">#{{ $tontine->name }}</span>
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+            <div class="section">
+                <p><strong>Type :</strong> {{ $tontine->type }}</p>
+                <p><strong>Contribution :</strong> {{ number_format($tontine->contribution, 0, ',', ' ') }} FCFA</p>
+                <p><strong>Fréquence :</strong> {{ $tontine->frequence }}</p>
+                <p><strong>Statut :</strong> 
+                    <span class="status active">Actif</span>
+                </p>
+                <p><strong>Date de création :</strong> {{ \Carbon\Carbon::parse($tontine->created_at)->format('d M Y') }}</p>
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="font-weight-bold">membres</label>
-                            <div class="d-flex flex-column">
-                                <ul class="list-unstyled m-0 avatar-group d-flex align-items-center">
-                                    @foreach ($tontine->membres as $membre)
-                                    <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" title="{{ $membre->username }}">
-                                        <img src="/storage/{{ $membre->image }}" alt="Avatar" class="rounded-circle">
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </div>
+
+            <hr>
+
+            <div class="section">
+                <h5>Membres ({{ count($tontine->membres) }})</h5>
+                <div class="member-grid">
+                    @foreach ($tontine->membres as $membre)
+                        <div class="member">
+                            <img src="/storage/{{ $membre->image }}" class="avatar" alt="{{ $membre->username }}">
+                            <span class="name">{{ $membre->username }}</span>
                         </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
-            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
         </div>
     </div>
 </div>
+</div>
+
+<!-- Place ce style dans ton layout ou au début du fichier Blade -->
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+    .modal-content {
+        font-family: 'Inter', sans-serif;
+        background-color: #fff;
+        border-radius: 12px;
+        padding: 1rem;
+    }
+
+    .modal-header h5 span.highlight {
+        color: #7e57c2;
+    }
+
+    .section {
+        margin-bottom: 1.5rem;
+    }
+
+    .section h4, .section h5 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .member-grid {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .member {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+
+    .member .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 4px;
+    }
+
+    .status.active {
+        color: #4CAF50;
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background-color: #7e57c2;
+        border-color: #7e57c2;
+    }
+
+    .btn-primary:hover {
+        background-color: #6a45b1;
+        border-color: #6a45b1;
+    }
+</style>
+
+
 @endforeach
 @push('page-script')
 <script>
