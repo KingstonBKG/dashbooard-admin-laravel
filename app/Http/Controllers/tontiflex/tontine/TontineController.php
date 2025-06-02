@@ -69,7 +69,7 @@ class TontineController extends Controller
     {
         $data = $this->tontineServices->getTontineDetails($id);
 
-        return view('pages.tontineview.main.index-tontine-main', $data);
+        return view('pages.tontineview.main.index-tontine-main', compact('data'));
     }
 
     public function edit($id)
