@@ -607,7 +607,12 @@
     </div>
 </div>
 @endforeach
+
+
+
 @push('page-script')
+
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchInputs = document.querySelectorAll('.search-user');
