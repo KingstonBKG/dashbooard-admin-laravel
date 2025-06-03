@@ -107,6 +107,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::put('/update/{id}', [UserController::class, 'update'])->name('user.update');
     });
 
+    Route::prefix('paiement')->group(function () {
+    Route::get('/', function() {return view('pages.paiement.paiement-view');})->name('paiement-index');
+    Route::get('/validation', function() {return view('pages.paiement.validation');})->name('paiement-index');
+
+    });
+
 
     Route::prefix('/dashboard')->group(function () {
         Route::get('/analytics', [AnalyticsController::class, 'index'])->name('dashboard-analytics');
