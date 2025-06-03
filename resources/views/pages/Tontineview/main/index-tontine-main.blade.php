@@ -1,6 +1,7 @@
 @php
 $isMenu = false;
 $navbarHideToggle = false;
+$tontineName = $data['tontine']->name;
 @endphp
 
 @extends('components/contentNavbarLayout')
@@ -17,9 +18,10 @@ $navbarHideToggle = false;
 @vite('resources/assets/js/dashboards-analytics.js')
 @endsection
 
-@section('title', 'Without menu - Layouts')
+@section("title", $tontineName)
 
 @section('content')
+
 <div class="dashboard-bg py-5">
     <div class="container dashboard-container">
         <div class="row mb-4">
@@ -63,8 +65,14 @@ $navbarHideToggle = false;
                         <div class="stat-label">Membres</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">{{ $data['stats']['contribution_amount'] }}</div>
-                        <div class="stat-label">Contribution</div>
+                        <div class="stat-value">
+                            <select name="" id="" class="form-select">
+                                @foreach ($tontinewallets as $wallets)
+                                <option value="{{ $wallets->tontine_id }}">{{ $wallets->type }}: {{ $wallets->montant }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="stat-label mt-3">Solde</div>
                     </div>
                 </div>
             </div>
@@ -170,25 +178,35 @@ $navbarHideToggle = false;
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="card dashboard-card h-100">
-                            <div class="card-body">
-                                <span class="fw-bold mb-2 d-block">Time tracker</span>
-                                <div class="timer-circle mb-3 position-relative">
-                                    <svg width="120" height="120">
-                                        <circle cx="60" cy="60" r="54" stroke="#eee" stroke-width="12" fill="none" />
-                                        <circle cx="60" cy="60" r="54" stroke="#696cff" stroke-width="12" fill="none" stroke-dasharray="339.292" stroke-dashoffset="50" />
-                                    </svg>
-                                    <div class="timer-value position-absolute top-50 start-50 translate-middle">
-                                        <span class="fs-3 fw-bold">02:35</span>
-                                        <div class="text-muted small">Work Time</div>
+                        <div class="card h-100 dashboard-card">
+                            <div class="card-header d-flex justify-content-between">
+                                <div class="card-title mb-0">
+                                    <h5 class="mb-1 me-2">Order Statistics</h5>
+                                    <p class="card-subtitle">42.82k Total Sales</p>
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn text-muted p-0" type="button" id="orederStatistics" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="bx bx-dots-vertical-rounded bx-lg"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="orederStatistics">
+                                        <a class="dropdown-item" href="javascript:void(0);">Select All</a>
+                                        <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
+                                        <a class="dropdown-item" href="javascript:void(0);">Share</a>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-center gap-2">
-                                    <button class="btn btn-light btn-circle"><i class="bx bx-play"></i></button>
-                                    <button class="btn btn-light btn-circle"><i class="bx bx-pause"></i></button>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-6">
+                                    <div class="d-flex flex-column align-items-center gap-1">
+                                        <h3 class="mb-1">8,258</h3>
+                                        <small>Total Orders</small>
+                                    </div>
+                                    <div id="orderStatisticsChart"></div>
                                 </div>
+                                
                             </div>
                         </div>
+
                     </div>
                 </div>
                 <div class=" mt-4">
@@ -397,6 +415,8 @@ $navbarHideToggle = false;
     </div>
 </div>
 </div>
+
+
 
 <style>
     #me {

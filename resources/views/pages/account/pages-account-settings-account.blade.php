@@ -68,10 +68,10 @@
               <label for="username" class="form-label">Nom utilisateur</label>
               <input class="form-control @error('username') is-invalid @enderror" type="text" id="username" name="username" value="{{old('username', $user->username)}}" autofocus />
             </div>
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <label for="email" class="form-label">E-mail</label>
               <input class="form-control @error('email') is-invalid @enderror" type="text" id="email" name="email" value="{{old('email', $user->email)}}" placeholder="john.doe@example.com" />
-            </div>
+            </div> -->
             <div class="col-md-6">
               <label for="password_confirmation" class="form-label">Nouveau mot de passe <span class="text-red">( Laissez vide si vous ne voulez pas changer )</span></label>
               <input class="form-control @error('password_confirmation') is-invalid @enderror" type="text" name="password_confirmation" id="password_confirmation" placeholder="" />

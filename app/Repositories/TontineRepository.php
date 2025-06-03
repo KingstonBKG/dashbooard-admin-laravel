@@ -6,7 +6,10 @@ use App\Constants\Roles;
 use App\Models\Invitation;
 use App\Models\Tontine;
 use App\Models\User;
+use App\Models\WalletTontine;
 use App\Repositories\interfaces\TontineRepositoryInterfaces;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -28,6 +31,15 @@ class TontineRepository implements TontineRepositoryInterfaces
         $tontine = Tontine::create($data);
         $user = Auth::user();
         $this->assignRoleToMember($user, $tontine->id, 'admin');
+
+        WalletTontine::create([
+            'tontine_id' => $tontine->id,
+            'montant' => 0,
+            'type' => 'principal',
+            'is_active' => true,
+            // 'updated_at' => Carbon::now(),
+            // 'created_at' => Carbon::now(),
+        ]);
 
         return $tontine;
     }
@@ -74,7 +86,7 @@ class TontineRepository implements TontineRepositoryInterfaces
         $invitation = Invitation::find($invitationId);
 
         $tontine = $this->getTontineById($tontineId);
-        
+
         $invitation->accepter();
 
         return $tontine->membres()->attach($userId);

@@ -54,6 +54,10 @@ use App\Http\Controllers\tontiflex\settings\SettingsController;
 use App\Http\Controllers\tontiflex\tontine\TontineController;
 use App\Http\Controllers\tontiflex\tontineview\TontineViewController;
 use App\Http\Controllers\tontiflex\wallet\WalletController;
+use App\Http\Controllers\tontiflex\walletTontineController\WalletTontineController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 // Tontiflex
 
@@ -71,8 +75,30 @@ Route::middleware('guest')->group(function () {
     });
 });
 
+
+// Email Verification Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/email/verify', function () {
+        if (auth()->user()->hasVerifiedEmail()) {
+            return redirect()->route('dashboard-analytics');
+        }
+        return view('pages.auth.verify-email');
+    })->name('verification.notice');
+
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+        return redirect()->route('dashboard-analytics');
+    })->middleware(['signed'])->name('verification.verify');
+
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+        return back()->with('message', 'Le lien de vérification a été renvoyé à votre adresse email.');
+    })->middleware(['throttle:6,1'])->name('verification.send');
+});
+
+
 // Routes protégées
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::get('/', [AnalyticsController::class, 'index'])->name('dashboard-analytics');
 
@@ -92,12 +118,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/settings-notifications', [SettingsController::class, 'notification'])->name('account-settings-notifications');
         Route::put('/settings-notifications/{id}', [SettingsController::class, 'updatenotificationauthorization'])->name('account.settings.notifications');
-        
+
         Route::get('/settings-connections', [SettingsController::class, 'connection'])->name('account-settings-connections');
 
         Route::get('/user/wallet', [SettingsController::class, 'wallet'])->name('account-settings-wallet');
         Route::put('/settings-wallet/{id}', [SettingsController::class, 'walletupdate'])->name('account.settings.wallet.walletupdate');
-
     });
 
 
@@ -127,21 +152,25 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/dashboard', [InvitationController::class, 'index'])->name('invitations-dashboard');
         Route::get('/mes-invitations', [InvitationController::class, 'invitations'])->name('invitations-mes-invitations');
         Route::post('/mes-invitations', [TontineController::class, 'addMemberToTontine'])->name('invitations.mes.invitations');
-        
-        
+
+
         Route::post('/refuse-invitation/{id}', [InvitationController::class, 'refuse'])->name('invitations.refuse.invitations');
 
-        
+
 
         Route::post('/{id}', [InvitationController::class, 'store'])->name('invitations.send');
     });
 
-    Route::prefix('/user')->name('wallet.')->group(function (){
-        Route::resource('wallet',WalletController::class);
+    Route::prefix('/user')->name('wallet.')->group(function () {
+        Route::resource('wallet', WalletController::class);
     });
 
     Route::prefix('/tontine-view')->group(function () {
         Route::get('{id}/main', [TontineController::class, 'show'])->name('tontine-view-main');
+    });
+
+    Route::prefix('/wallettontine')->group(function () {
+        Route::resource('wallet-tontine', WalletTontineController::class);
     });
 });
 
@@ -161,7 +190,6 @@ Route::middleware('auth:sanctum')->group(function () {
 //analytics
 
 Route::get('/dashbord/analytics', [Analytics::class, 'index'])->name('dashboard-analytic');
-
 
 // layout
 Route::get('/layouts/without-menu', [WithoutMenu::class, 'index'])->name('layouts-without-menu');

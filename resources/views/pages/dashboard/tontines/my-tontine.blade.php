@@ -31,7 +31,7 @@
         <li>{{ $error }}</li>
         @endforeach
     </ul>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
 
 </div>
 @endif
@@ -210,6 +210,7 @@
                                 class="form-control @error('name') is-invalid @enderror"
                                 placeholder="Entrer le nom de la tontine"
                                 value="{{ old('name') }}">
+                                
                             @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -425,8 +426,7 @@
 
 <!-- Modal suppression -->
 @foreach ($tontines as $tontine)
-<div class="modal fade" id="deleteTontineModal{{ $tontine->id }}" tabindex="-1"
-    aria-labelledby="deleteTontineModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteTontineModal{{ $tontine->id }}" tabindex="-1" aria-labelledby="deleteTontineModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white justify-content-between">
@@ -500,9 +500,9 @@
             <div class="modal-body">
                 <div class="input-group input-group-merge mb-3">
                     <span class="input-group-text"><i class="bx bx-search"></i></span>
-                    <input type="text" class="form-control search-user" 
-                           placeholder="Rechercher par email..." 
-                           aria-label="Search...">
+                    <input type="text" class="form-control search-user"
+                        placeholder="Rechercher par email..."
+                        aria-label="Search...">
                 </div>
 
                 <div class="card my-4" style="max-height: 400px; overflow-y: auto;">
@@ -521,33 +521,33 @@
                                 <tr class="user-row" data-email="{{ $user->email }}">
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <img src="{{ $user->image ? '/storage/'.$user->image : asset('assets/img/avatars/1.png') }}" 
-                                                 alt="Avatar" class="rounded-circle me-2" style="width: 32px; height: 32px;">
+                                            <img src="{{ $user->image ? '/storage/'.$user->image : asset('assets/img/avatars/1.png') }}"
+                                                alt="Avatar" class="rounded-circle me-2" style="width: 32px; height: 32px;">
                                             {{ $user->email }}
                                         </div>
                                     </td>
                                     <td>{{ $user->username }}</td>
                                     <td>
                                         @php
-                                            $invitation = \App\Models\Invitation::where('tontine_id', $tontine->id)
-                                                ->where('destinataire_email', $user->email)
-                                                ->first();
+                                        $invitation = \App\Models\Invitation::where('tontine_id', $tontine->id)
+                                        ->where('destinataire_email', $user->email)
+                                        ->first();
                                         @endphp
 
                                         @if($invitation)
-                                            <button class="btn btn-secondary btn-sm" disabled>
-                                                <i class="bx bx-check"></i> Déjà invité
-                                            </button>
+                                        <button class="btn btn-secondary btn-sm" disabled>
+                                            <i class="bx bx-check"></i> Déjà invité
+                                        </button>
                                         @else
-                                            <form action="{{ route('invitations.send', $tontine->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                <input type="hidden" name="expediteur_id" value="{{ Auth::user()->id }}">
-                                                <input type="hidden" name="destinataire_email" value="{{ $user->email }}">
-                                                <input type="hidden" name="tontine_id" value="{{ $tontine->id }}">
-                                                <button type="submit" class="btn btn-primary btn-sm">
-                                                    <i class="bx bx-envelope"></i> Inviter
-                                                </button>
-                                            </form>
+                                        <form action="{{ route('invitations.send', $tontine->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <input type="hidden" name="expediteur_id" value="{{ Auth::user()->id }}">
+                                            <input type="hidden" name="destinataire_email" value="{{ $user->email }}">
+                                            <input type="hidden" name="tontine_id" value="{{ $tontine->id }}">
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                <i class="bx bx-envelope"></i> Inviter
+                                            </button>
+                                        </form>
                                         @endif
                                     </td>
                                 </tr>
@@ -571,78 +571,52 @@
 <!-- Modal details -->
 
 @foreach ($tontines as $tontine)
-<div class="modal fade detail-modal" id="detailsTontineModal{{ $tontine->id }}" tabindex="-1"
-    role="dialog">
-   
-    
-<div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-        <div class="modal-header bg-primary justify-content-between">
-            <h5 class="modal-title text-white">
-                <i class="anticon anticon-info-circle"></i> Détails de la tontine
-                <span class="highlight">#{{ $tontine->name }}</span>
-            </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <div class="modal-body">
-            <div class="section">
-                <p><strong>Type :</strong> {{ $tontine->type }}</p>
-                <p><strong>Contribution :</strong> {{ number_format($tontine->contribution, 0, ',', ' ') }} FCFA</p>
-                <p><strong>Fréquence :</strong> {{ $tontine->frequence }}</p>
-                <p><strong>Statut :</strong> 
-                    <span class="status active">Actif</span>
-                </p>
-                <p><strong>Date de création :</strong> {{ \Carbon\Carbon::parse($tontine->created_at)->format('d M Y') }}</p>
+<div class="modal fade" id="detailsTontineModal{{ $tontine->id }}" tabindex="-1" aria-labelledby="detailsTontineModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white justify-content-betwee">
+                <h5 class="modal-title text-white">
+                    <i class="anticon anticon-info-circle"></i> Détails de la tontine
+                    <span class="highlight">#{{ $tontine->name }}</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <hr>
+            <div class="modal-body">
+                <div class="section">
+                    <p><strong>Type :</strong> {{ $tontine->type }}</p>
+                    <p><strong>Contribution :</strong> {{ number_format($tontine->contribution, 0, ',', ' ') }} FCFA</p>
+                    <p><strong>Fréquence :</strong> {{ $tontine->frequence }}</p>
+                    <p><strong>Statut :</strong>
+                        <span class="status active">Actif</span>
+                    </p>
+                    <p><strong>Date de création :</strong> {{ \Carbon\Carbon::parse($tontine->created_at)->format('d M Y') }}</p>
+                </div>
 
-            <div class="section">
-                <h5>Membres ({{ count($tontine->membres) }})</h5>
-                <div class="member-grid">
-                    @foreach ($tontine->membres as $membre)
+                <hr>
+
+                <div class="section">
+                    <h5>Membres ({{ count($tontine->membres) }})</h5>
+                    <div class="member-grid">
+                        @foreach ($tontine->membres as $membre)
                         <div class="member">
                             <img src="/storage/{{ $membre->image }}" class="avatar" alt="{{ $membre->username }}">
                             <span class="name">{{ $membre->username }}</span>
                         </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+            </div>
         </div>
     </div>
-</div>
 </div>
 
 <!-- Place ce style dans ton layout ou au début du fichier Blade -->
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-
-    .modal-content {
-        font-family: 'Inter', sans-serif;
-        background-color: #fff;
-        border-radius: 12px;
-        padding: 1rem;
-    }
-
-    .modal-header h5 span.highlight {
-        color: #7e57c2;
-    }
-
-    .section {
-        margin-bottom: 1.5rem;
-    }
-
-    .section h4, .section h5 {
-        font-size: 1.1rem;
-        margin-bottom: 1rem;
-        font-weight: 600;
-    }
-
     .member-grid {
         display: flex;
         gap: 1rem;
@@ -668,42 +642,37 @@
         color: #4CAF50;
         font-weight: bold;
     }
-
-    .btn-primary {
-        background-color: #7e57c2;
-        border-color: #7e57c2;
-    }
-
-    .btn-primary:hover {
-        background-color: #6a45b1;
-        border-color: #6a45b1;
-    }
 </style>
 
 
 @endforeach
+
+
+
 @push('page-script')
+
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInputs = document.querySelectorAll('.search-user');
-    
-    searchInputs.forEach(input => {
-        input.addEventListener('keyup', function() {
-            const searchValue = this.value.toLowerCase();
-            const modalId = this.closest('.modal').id;
-            const rows = document.querySelectorAll(`#${modalId} .user-row`);
-            
-            rows.forEach(row => {
-                const email = row.getAttribute('data-email').toLowerCase();
-                if (email.includes(searchValue)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInputs = document.querySelectorAll('.search-user');
+
+        searchInputs.forEach(input => {
+            input.addEventListener('keyup', function() {
+                const searchValue = this.value.toLowerCase();
+                const modalId = this.closest('.modal').id;
+                const rows = document.querySelectorAll(`#${modalId} .user-row`);
+
+                rows.forEach(row => {
+                    const email = row.getAttribute('data-email').toLowerCase();
+                    if (email.includes(searchValue)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
             });
         });
     });
-});
 </script>
 @endpush
 @endsection

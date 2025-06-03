@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
   use HasFactory, Notifiable, HasApiTokens;
 
@@ -70,13 +71,13 @@ class User extends Authenticatable
     return $this->hasMany(Wallet::class);
   }
 
-  public function hasRole($tontineId, $role){
+  public function hasRole($tontineId, $role)
+  {
     return $this->tontines()->where('tontine_id', $tontineId)->where('role', $role)->exists();
   }
 
-  public function assignRole($tontineId, $role){
+  public function assignRole($tontineId, $role)
+  {
     $this->tontines()->attach($tontineId, ['role' => $role]);
   }
-
-  
 }

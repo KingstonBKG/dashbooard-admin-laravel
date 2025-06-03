@@ -4,7 +4,7 @@
 
 @section('page-style')
 @vite([
-  'resources/assets/vendor/scss/pages/page-auth.scss'
+'resources/assets/vendor/scss/pages/page-auth.scss'
 ])
 @endsection
 
@@ -27,20 +27,38 @@
           <h4 class="mb-1">L'aventure commence ici 🚀</h4>
           <p class="mb-6">Utiliser votre application avec plaisir!</p>
 
+          @if ($errors->any())
+          <div class="alert alert-danger alert-dismissible" role="alert">
+            <ul>
+              @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+
+          </div>
+          @endif
+
           <form id="formAuthentication" class="mb-6" action="{{route('auth.register')}}" method="POST">
             @csrf
             <div class="mb-6">
               <label for="username" class="form-label">Nom utilisateur</label>
-              <input type="text" class="form-control" id="username" name="username" placeholder="Entrer votre nom utilisateur" autofocus>
+              <input type="text" class="form-control @error('username')is-invalid @enderror" id="username" name="username" placeholder="Entrer votre nom utilisateur" autofocus>
+              @error('username')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
+              @enderror
             </div>
             <div class="mb-6">
               <label for="email" class="form-label">Email</label>
-              <input type="text" class="form-control" id="email" name="email" placeholder="Entrer votre email">
+              <input type="text" class="form-control  @error('email')is-invalid @enderror" id="email" name="email" placeholder="Entrer votre email">
+              
             </div>
             <div class="mb-6 form-password-toggle">
               <label class="form-label" for="password">Mot de passe</label>
               <div class="input-group input-group-merge">
-                <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+                <input type="password" id="password" class="forwo-control  @error('password')is-invalid @enderror" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
               </div>
             </div>
@@ -60,7 +78,7 @@
           </form>
 
           <p class="text-center">
-            <span>Vous avez déjà un comte?</span>
+            <span>Vous avez déjà un compte?</span>
             <a href="{{url('auth/login')}}">
               <span>Connectez-vous</span>
             </a>

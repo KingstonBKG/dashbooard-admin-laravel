@@ -11,6 +11,7 @@ use App\Models\Tontine;
 use App\Models\User;
 use App\Services\InvitationServices;
 use App\Services\TontineServices;
+use App\Services\WalletTontineServices;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,21 +21,24 @@ class TontineController extends Controller
     use AuthorizesRequests;
     private $tontineServices;
     private $invitationServices;
+    protected $walletTontineServices;
 
-    public function __construct(TontineServices $tontineServices, InvitationServices $InvitationServicesService)
+
+    public function __construct(TontineServices $tontineServices, InvitationServices $InvitationServicesService, WalletTontineServices $walletTontineServices)
     {
         $this->tontineServices = $tontineServices;
         $this->invitationServices = $InvitationServicesService;
+        $this->walletTontineServices = $walletTontineServices;
     }
 
     public function index()
     {
         $tontines = $this->tontineServices->getUserTontines();
-            $users = User::where('id', '!=', Auth::id())
-        ->select('id', 'email', 'username', 'image')
-        ->orderBy('email')
-        ->take(10)
-        ->get();
+        $users = User::where('id', '!=', Auth::id())
+            ->select('id', 'email', 'username', 'image')
+            ->orderBy('email')
+            ->take(10)
+            ->get();
 
 
         return view('pages.dashboard.tontines.dashboard-tontine', compact('tontines', 'users'));
@@ -68,8 +72,10 @@ class TontineController extends Controller
     public function show($id)
     {
         $data = $this->tontineServices->getTontineDetails($id);
+        $tontinewallets = $this->walletTontineServices->getWalletTontines();
 
-        return view('pages.tontineview.main.index-tontine-main', compact('data'));
+
+        return view('pages.tontineview.main.index-tontine-main', compact('data', 'tontinewallets'));
     }
 
     public function edit($id)
@@ -138,7 +144,5 @@ class TontineController extends Controller
         return view('pages.dashboard.invitations.index-invitations', compact('invitations', 'action'));
     }
 
-    public function assignRoleToMember($id){
-
-    }
+    public function assignRoleToMember($id) {}
 }

@@ -10,16 +10,16 @@ use Illuminate\Support\Facades\Auth;
 
 class registerController extends Controller
 {
-        private $userServices;
+    private $userServices;
 
     public function __construct(UserServices $userService)
     {
         $this->userServices = $userService;
     }
-    
+
     public function index()
     {
-        if(Auth::check()){
+        if (Auth::check()) {
             return redirect()->route('dashboard-analytics');
         }
         return view('pages.auth.auth-register');
@@ -27,7 +27,6 @@ class registerController extends Controller
 
     public function register(Request $request)
     {
-
         $user = $this->userServices->registerUser($request->all());
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -37,9 +36,9 @@ class registerController extends Controller
             ]);
         }
 
-        $user->notify(new RegisterRequestNotification($user));
+        $user->sendEmailVerificationNotification();
 
-
-        return redirect()->route('auth-login');
+        // Redirige vers la page de login avec un message
+        return redirect()->route('auth-login')->with('message', 'Un email de vérification a été envoyé à votre adresse.');
     }
 }
