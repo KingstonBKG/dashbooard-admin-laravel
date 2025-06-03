@@ -4,7 +4,7 @@
 
 @section('page-style')
 @vite([
-  'resources/assets/vendor/scss/pages/page-auth.scss'
+'resources/assets/vendor/scss/pages/page-auth.scss'
 ])
 @endsection
 
@@ -26,15 +26,33 @@
           <h4 class="mb-1">Bienvenue sur {{config('variables.appName')}}! 👋</h4>
           <p class="mb-6">Entrez vos informations pour vous connecter</p>
 
+          @if(session('message'))
+          <div class="alert alert-success">
+            {{ session('message') }}
+          </div>
+          @endif
+
+          @if ($errors->any())
+          <div class="alert alert-danger alert-dismissible" role="alert">
+            <ul>
+              @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+
+          </div>
+          @endif
+
           <form id="formAuthentication" class="mb-6" action="{{ route('auth.login') }}" method="POST">
             @csrf
             <div class="mb-6">
               <label for="email" class="form-label">Email</label>
               <input type="email" class="form-control @error('email') is-valid @enderror" id="email" name="email" placeholder="Entrer votre email ou nom utilisateur" autofocus value="{{ old('email') }}">
-              @error('email') 
-                <span class="invalid-feedback" role="alert">
-                  <strong>{{ $message }}</strong>
-                </span>
+              @error('email')
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+              </span>
               @enderror
             </div>
             <div class="mb-6 form-password-toggle">
@@ -42,11 +60,11 @@
               <div class="input-group input-group-merge">
                 <input type="password" id="password" class="form-control @error('password') is-valid @enderror" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                @error('password') 
+                @error('password')
                 <span class="invalid-feedback" role="alert">
                   <strong>{{ $message }}</strong>
                 </span>
-              @enderror
+                @enderror
               </div>
             </div>
             <div class="mb-8">

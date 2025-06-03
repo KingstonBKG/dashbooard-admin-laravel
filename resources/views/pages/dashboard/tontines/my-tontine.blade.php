@@ -210,6 +210,7 @@
                                 class="form-control @error('name') is-invalid @enderror"
                                 placeholder="Entrer le nom de la tontine"
                                 value="{{ old('name') }}">
+                                
                             @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -616,8 +617,6 @@
 
 <!-- Place ce style dans ton layout ou au début du fichier Blade -->
 <style>
-
-
     .member-grid {
         display: flex;
         gap: 1rem;
@@ -643,7 +642,6 @@
         color: #4CAF50;
         font-weight: bold;
     }
-
 </style>
 
 

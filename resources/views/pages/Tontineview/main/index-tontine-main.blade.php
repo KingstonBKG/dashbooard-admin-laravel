@@ -20,6 +20,7 @@ $navbarHideToggle = false;
 @section('title', 'Without menu - Layouts')
 
 @section('content')
+
 <div class="dashboard-bg py-5">
     <div class="container dashboard-container">
         <div class="row mb-4">
@@ -63,8 +64,14 @@ $navbarHideToggle = false;
                         <div class="stat-label">Membres</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">{{ $data['stats']['contribution_amount'] }}</div>
-                        <div class="stat-label">Contribution</div>
+                        <div class="stat-value">
+                            <select name="" id="" class="form-select">
+                                @foreach ($tontinewallets as $wallets)
+                                <option value="{{ $wallets->tontine_id }}">{{ $wallets->type }}: {{ $wallets->montant }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="stat-label mt-3">Solde</div>
                     </div>
                 </div>
             </div>
@@ -397,6 +404,8 @@ $navbarHideToggle = false;
     </div>
 </div>
 </div>
+
+
 
 <style>
     #me {

@@ -23,7 +23,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'username' => 'nullable|string|max:20',
-            'email' => 'required|email|unique:users,email,'.$this->route('id'),
+            // 'email' => 'required|email|unique:users,email,'.$this->route('id'),
             'password' => 'nullable|string|confirmed|min:8',
             'password_confirmation' => 'required_with:password',
             'organization' => 'nullable|string',
@@ -41,7 +41,7 @@ class UpdateRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.email' => "Entrer une adresse email valide",
+            // 'email.email' => "Entrer une adresse email valide",
             'image.max' => "L'image doit être de inférieure ou égale à 2mo"
         ];
     }

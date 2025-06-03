@@ -39,4 +39,9 @@ class Tontine extends Model
         $this->role = $role;
         $this->save();
     }
+
+    public function tontinewallet()
+    {
+        return $this->hasMany(WalletTontine::class);
+    }
 }
