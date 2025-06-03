@@ -16,6 +16,7 @@ return new class extends Migration
             $table->decimal('montant', 10, 2)->default(0);
             $table->string('type')->default('principal'); // principal, epargne, etc.
             $table->boolean('is_active')->default(true);
+            $table->timestamps();
         });
     }
 

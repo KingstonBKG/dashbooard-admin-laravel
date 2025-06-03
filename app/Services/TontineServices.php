@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Tontine;
+use App\Models\WalletTontine;
 use App\Repositories\interfaces\TontineRepositoryInterfaces;
 use Illuminate\Support\Facades\Auth;
 

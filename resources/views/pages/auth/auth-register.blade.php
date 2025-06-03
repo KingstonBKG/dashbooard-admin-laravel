@@ -53,22 +53,13 @@
             <div class="mb-6">
               <label for="email" class="form-label">Email</label>
               <input type="text" class="form-control  @error('email')is-invalid @enderror" id="email" name="email" placeholder="Entrer votre email">
-              @error('email')
-              <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-              </span>
-              @enderror
+              
             </div>
             <div class="mb-6 form-password-toggle">
               <label class="form-label" for="password">Mot de passe</label>
               <div class="input-group input-group-merge">
                 <input type="password" id="password" class="forwo-control  @error('password')is-invalid @enderror" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
                 <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                @error('password')
-                <span class="invalid-feedback" role="alert">
-                  <strong>{{ $message }}</strong>
-                </span>
-                @enderror
               </div>
             </div>
 
