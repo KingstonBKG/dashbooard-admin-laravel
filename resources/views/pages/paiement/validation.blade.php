@@ -1,3 +1,8 @@
+@php
+$isMenu = false;
+$navbarHideToggle = false;
+$isNavbar = false;
+@endphp
 
 @extends('components/contentNavbarLayout')
 

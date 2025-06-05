@@ -53,12 +53,6 @@
           "slug": "invitations-mes-invitations"
         }
       ]
-    },
-    {
-      "url": "/user/wallet",
-      "name": "Portefeuilles",
-      "icon": "menu-icon tf-icons bx bx-money",
-      "slug": "invitations"
     }
   ]
 }

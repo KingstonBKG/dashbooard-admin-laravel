@@ -50,6 +50,7 @@ use App\Http\Controllers\tontiflex\auth\loginController;
 use App\Http\Controllers\tontiflex\auth\registerController;
 use App\Http\Controllers\tontiflex\dashboard\AnalyticsController;
 use App\Http\Controllers\tontiflex\invitation\InvitationController;
+use App\Http\Controllers\tontiflex\paiement\PaiementController;
 use App\Http\Controllers\tontiflex\settings\SettingsController;
 use App\Http\Controllers\tontiflex\tontine\TontineController;
 use App\Http\Controllers\tontiflex\tontineview\TontineViewController;
@@ -82,6 +83,7 @@ Route::middleware('auth')->group(function () {
         if (auth()->user()->hasVerifiedEmail()) {
             return redirect()->route('dashboard-analytics');
         }
+
         return view('pages.auth.verify-email');
     })->name('verification.notice');
 
@@ -108,9 +110,15 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     });
 
     Route::prefix('paiement')->group(function () {
-    Route::get('/', function() {return view('pages.paiement.paiement-view');})->name('paiement-index');
-    Route::get('/validation', function() {return view('pages.paiement.validation');})->name('paiement-index');
+        Route::get('/{id}', [PaiementController::class, 'index'])->name('paiement-index');
+        
+        Route::get('/withdraw/{id}', [PaiementController::class, 'withdraw'])->name('paiement-withdraw');
 
+        Route::post('/proceed/{id}', [PaiementController::class, 'store'])->name('paiement.store');
+
+        Route::get('/paiement-result', function () {
+            return view('pages.paiement.validation');
+        })->name('paiement-result');
     });
 
 
@@ -128,7 +136,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/settings-connections', [SettingsController::class, 'connection'])->name('account-settings-connections');
 
         Route::get('/user/wallet', [SettingsController::class, 'wallet'])->name('account-settings-wallet');
-        Route::put('/settings-wallet/{id}', [SettingsController::class, 'walletupdate'])->name('account.settings.wallet.walletupdate');
+
+        Route::post('/settings-wallet/{id}', [SettingsController::class, 'walletupdate'])->name('account.settings.wallet.walletupdate');
     });
 
 
@@ -143,6 +152,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
         Route::delete('/tontines/{id}', [TontineController::class, 'destroy'])->name('tontine.destroy');
         Route::get('/tontines/{id}', [TontineController::class, 'tontinecreatevew'])->name('tontine-destroy');
+
+        Route::post('/assignrole/{user_id}/{tontine_id}', [TontineController::class, 'assignRoleToMember'])->name('tontines.assignrole');
+
 
         Route::post('/', [TontineController::class, 'store'])->name('my.tontine');
     });

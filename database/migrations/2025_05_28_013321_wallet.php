@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->decimal('montant', 10, 2)->default(0);
             $table->string('type')->default('principal'); // principal, epargne, etc.
-            $table->string('devise')->default('XAF');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

@@ -27,17 +27,6 @@ class WalletController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(WalletRequest $request)
-    {
-        $this->walletServices->store($request);
-        $wallets = $this->walletServices->getUserWallets();
-
-        return redirect()->route('account-settings-wallet', compact('wallets'));
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(string $id)
@@ -51,17 +40,5 @@ class WalletController extends Controller
     public function update(WalletRequest $request, string $id)
     {
         //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        $this->walletServices->deleteWallet($id);
-
-        $wallets = $this->walletServices->getUserWallets();
-
-        return redirect()->route('account-settings-wallet', compact('wallets'));
     }
 }

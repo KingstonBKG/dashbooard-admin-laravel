@@ -10,6 +10,7 @@ use App\Models\Invitation;
 use App\Models\Tontine;
 use App\Models\User;
 use App\Services\InvitationServices;
+use App\Services\PaiementServices;
 use App\Services\TontineServices;
 use App\Services\WalletTontineServices;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -22,13 +23,17 @@ class TontineController extends Controller
     private $tontineServices;
     private $invitationServices;
     protected $walletTontineServices;
+    protected $paiementServices;
 
 
-    public function __construct(TontineServices $tontineServices, InvitationServices $InvitationServicesService, WalletTontineServices $walletTontineServices)
+
+
+    public function __construct(TontineServices $tontineServices, InvitationServices $InvitationServicesService, WalletTontineServices $walletTontineServices,PaiementServices $paiementServices)
     {
         $this->tontineServices = $tontineServices;
         $this->invitationServices = $InvitationServicesService;
         $this->walletTontineServices = $walletTontineServices;
+        $this->paiementServices = $paiementServices;
     }
 
     public function index()
@@ -73,9 +78,10 @@ class TontineController extends Controller
     {
         $data = $this->tontineServices->getTontineDetails($id);
         $tontinewallets = $this->walletTontineServices->getWalletTontines();
+        $paiements = $this->paiementServices->getPaiements($id);
 
 
-        return view('pages.tontineview.main.index-tontine-main', compact('data', 'tontinewallets'));
+        return view('pages.tontineview.main.index-tontine-main', compact('data', 'tontinewallets', 'paiements'));
     }
 
     public function edit($id)
@@ -125,6 +131,17 @@ class TontineController extends Controller
             ->with('success', 'Tontine restaurée avec succès');
     }
 
+    public function assignRoleToMember($user_id, $tontine_id, Request $request)
+    {
+        $user = User::findOrFail($user_id);
+        $role = $request->input('role');
+
+        $this->tontineServices->assignRoleToMember($user, $tontine_id, $role);
+
+        return back()->with('message', 'Le rôle à été assigné');
+
+    }
+
     public function addMemberToTontine(Request $request)
     {
         $tontine_id = $request->input('tontine_id');
@@ -144,5 +161,4 @@ class TontineController extends Controller
         return view('pages.dashboard.invitations.index-invitations', compact('invitations', 'action'));
     }
 
-    public function assignRoleToMember($id) {}
 }

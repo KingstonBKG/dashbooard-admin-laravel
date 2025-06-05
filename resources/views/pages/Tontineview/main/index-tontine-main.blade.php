@@ -2,6 +2,7 @@
 $isMenu = false;
 $navbarHideToggle = false;
 $tontineName = $data['tontine']->name;
+
 @endphp
 
 @extends('components/contentNavbarLayout')
@@ -60,19 +61,47 @@ $tontineName = $data['tontine']->name;
                     </div>
                 </div>
                 <div class="dashboard-stats d-flex gap-4">
-                    <div class="stat-card">
-                        <div class="stat-value">{{ $data['stats']['total_members'] }}</div>
-                        <div class="stat-label">Membres</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">
-                            <select name="" id="" class="form-select">
-                                @foreach ($tontinewallets as $wallets)
-                                <option value="{{ $wallets->tontine_id }}">{{ $wallets->type }}: {{ $wallets->montant }}</option>
-                                @endforeach
-                            </select>
+
+
+
+                    <div class="accordion mt-4" id="accordionExample">
+                        <div class="card accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="true" aria-controls="accordionOne">
+                                    Paiement
+                                </button>
+                            </h2>
+
+                            <div id="accordionOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <a href="{{ route('paiement-index', $data['tontine']->id) }}" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" data-bs-original-title="<i class='bx bx-money bx-xs' ></i> <span>Envoyez de l'argent</span>">Cotiser</a>
+
+                                    @can('managemoney', $data['tontine'])
+                                    <a href="{{ route('paiement-withdraw', $data['tontine']->id) }}" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" data-bs-original-title="<i class='bx bx-money bx-xs' ></i> <span>Retirer de l'argent</span>">Retirer</a>
+                                    @endcan
+                                </div>
+                            </div>
                         </div>
-                        <div class="stat-label mt-3">Solde</div>
+                    </div>
+
+                    <div class="accordion mt-4" id="accordionExample">
+                        <div class="card accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionTwo" aria-expanded="true" aria-controls="accordionOne">
+                                    Solde de la tontine
+                                </button>
+                            </h2>
+
+                            <div id="accordionTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <div class="list-group">
+                                        @foreach ($tontinewallets as $wallets)
+                                        <a href="javascript:void(0);" class="list-group-item list-group-item-action">{{ $wallets->type }}: {{ number_format($wallets->montant, 0,'', ' ')  }} FCFA</a>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -99,17 +128,48 @@ $tontineName = $data['tontine']->name;
                                 <h6 class="mb-0">{{$membres->username}}</h6>
                                 <small>{{$membres->role}}</small>
                             </div>
+
+                            @can('assignrole', $data['tontine'])
+
                             <div class="dropdown">
                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" type="button" href="">
-                                        <i class="bx bx-log-in me-1"></i>
-                                        <span class="m-l-10">option 1</span>
-                                    </a>
-                                    <a class="dropdown-item" type="button" href="">
-                                        <i class="bx bx-log-in me-1"></i>
-                                        <span class="m-l-10">option 2</span>
-                                    </a>
+                                    <small class="text-light fw-medium mx-5">Assigner un rôle</small>
+
+                                    <form action="{{ route('tontines.assignrole', [
+                                        'user_id' => $membres->id,
+                                        'tontine_id' => $data['tontine']->id,
+                                    ]) }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="role" value="">
+                                        <a class="dropdown-item" type="button" href="">
+                                            <button type="submit" class="m-l-10 btn btn-primary">aucun role</button>
+                                        </a>
+                                    </form>
+
+                                    <form action="{{ route('tontines.assignrole', [
+                                        'user_id' => $membres->id,
+                                        'tontine_id' => $data['tontine']->id,
+                                    ]) }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="role" value="caissier">
+                                        <a class="dropdown-item" type="button" href="">
+                                            <button type="submit" class="m-l-10 btn btn-primary">caissier</button>
+                                        </a>
+                                    </form>
+
+                                    <form action="{{ route('tontines.assignrole', [
+                                        'user_id' => $membres->id,
+                                        'tontine_id' => $data['tontine']->id,
+                                    ]) }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="role" value="secretaire">
+
+                                        <a class="dropdown-item" type="button" href="">
+                                            <button type="submit" class="m-l-10 btn btn-primary">secretaire</button>
+                                        </a>
+                                    </form>
+
                                     <button class="dropdown-item" type="button" data-bs-toggle="modal"
                                         data-bs-target="#detailsTontineModal">
                                         <i class="bx bx-show me-1"></i>
@@ -119,6 +179,7 @@ $tontineName = $data['tontine']->name;
 
                                 </div>
                             </div>
+                            @endcan
                         </div>
                     </div>
                     @endforeach
@@ -203,7 +264,7 @@ $tontineName = $data['tontine']->name;
                                     </div>
                                     <div id="orderStatisticsChart"></div>
                                 </div>
-                                
+
                             </div>
                         </div>
 
@@ -265,68 +326,53 @@ $tontineName = $data['tontine']->name;
             <div class="col-md-3">
                 <div class="card dashboard-card h-100">
                     <div class="card-body">
-                        <div class="">
-                            <h6 class="text-muted">Dernieres transactions</h6>
-                            <div class="card-body pt-4">
-                                <ul class="p-0 m-0">
-                                    <li class="d-flex align-items-center mb-6">
-                                        <div class="avatar flex-shrink-0 me-3">
-                                            <img src="{{asset('assets/img/icons/unicons/paypal.png')}}" alt="User" class="rounded">
+                        <h6 class="text-muted">4 dernieres transactions</h6>
+                        <div class="card-body">
+                            <ul class="p-0 m-0">
+                                @foreach ($paiements->take(4) as $paiement)
+                                <li class="d-flex align-items-center mb-6">
+                                    <div class="avatar flex-shrink-0 me-3">
+                                        @if ($paiement->moyen == 'orange_money')
+                                        <img src="{{asset('assets/img/icons/unicons/Orange_Money.png')}}" alt="User" class="rounded">
+                                        @elseif($paiement->moyen == 'mobile_money')
+                                        <img src="{{asset('assets/img/icons/unicons/mobile_money.png')}}" alt="User" class="rounded">
+                                        @elseif($paiement->moyen == 'bank_card')
+                                        <img src="{{asset('assets/img/icons/unicons/card.png')}}" alt="User" class="rounded">
+                                        @endif
+                                    </div>
+                                    <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                        <div class="me-2">
+                                            <small class="d-block">{{ $paiement['utilisateur']->username }}</small>
+                                            <small class="d-block">
+                                                @if ($paiement->moyen == 'orange_money')
+                                                Orange Money
+                                                @elseif($paiement->moyen == 'mobile_money')
+                                                Mobile Money
+                                                @elseif($paiement->moyen == 'bank_card')
+                                                Carte Bancaire
+                                                @endif
+                                            </small>
+                                            <h6 class="fw-normal mb-0">
+                                                @if ($paiement->type == 'deposit')
+                                                Dépot d'argent
+                                                @elseif ($paiement->type == 'withdraw')
+                                                Retrait d'argent
+                                                @endif
+                                            </h6>
                                         </div>
-                                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                            <div class="me-2">
-                                                <small class="d-block">Paypal</small>
-                                                <h6 class="fw-normal mb-0">Send money</h6>
-                                            </div>
-                                            <div class="user-progress d-flex align-items-center gap-2">
-                                                <h6 class="fw-normal mb-0">+82.6</h6> <span class="text-muted">USD</span>
-                                            </div>
+                                        <div class="user-progress d-flex align-items-center gap-2">
+                                            @if ($paiement->type == 'deposit')
+                                            <h6 class="fw-normal mb-0 text-success">+{{ number_format( $paiement->montant, 0,'', ' ') }}</h6><span class="text-success">FCFA</span>
+                                            @elseif ($paiement->type == 'withdraw')
+                                            <h6 class="fw-normal mb-0 text-danger">-{{ number_format( $paiement->montant, 0,'', ' ') }}</h6><span class="text-danger">FCFA</span>
+                                            @endif
                                         </div>
-                                    </li>
-                                    <li class="d-flex align-items-center mb-6">
-                                        <div class="avatar flex-shrink-0 me-3">
-                                            <img src="{{asset('assets/img/icons/unicons/wallet.png')}}" alt="User" class="rounded">
-                                        </div>
-                                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                            <div class="me-2">
-                                                <small class="d-block">Wallet</small>
-                                                <h6 class="fw-normal mb-0">Mac'D</h6>
-                                            </div>
-                                            <div class="user-progress d-flex align-items-center gap-2">
-                                                <h6 class="fw-normal mb-0">+270.69</h6> <span class="text-muted">USD</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="d-flex align-items-center mb-6">
-                                        <div class="avatar flex-shrink-0 me-3">
-                                            <img src="{{asset('assets/img/icons/unicons/chart.png')}}" alt="User" class="rounded">
-                                        </div>
-                                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                            <div class="me-2">
-                                                <small class="d-block">Transfer</small>
-                                                <h6 class="fw-normal mb-0">Refund</h6>
-                                            </div>
-                                            <div class="user-progress d-flex align-items-center gap-2">
-                                                <h6 class="fw-normal mb-0">+637.91</h6> <span class="text-muted">USD</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="d-flex align-items-center mb-6">
-                                        <div class="avatar flex-shrink-0 me-3">
-                                            <img src="{{asset('assets/img/icons/unicons/cc-primary.png')}}" alt="User" class="rounded">
-                                        </div>
-                                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                            <div class="me-2">
-                                                <small class="d-block">Credit Card</small>
-                                                <h6 class="fw-normal mb-0">Ordered Food</h6>
-                                            </div>
-                                            <div class="user-progress d-flex align-items-center gap-2">
-                                                <h6 class="fw-normal mb-0">-838.71</h6> <span class="text-muted">USD</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
+                                    </div>
+                                </li>
+
+                                @endforeach
+
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -426,6 +472,12 @@ $tontineName = $data['tontine']->name;
         justify-content: center;
         align-items: flex-end;
         display: flex;
+    }
+
+    #me:hover {
+        transition: ease-in-out 100ms;
+        scale: 1.01;
+        cursor: pointer;
     }
 
     .dashboard-bg {

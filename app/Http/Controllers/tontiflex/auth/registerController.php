@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\tontiflex\auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Wallet;
 use App\Notifications\RegisterRequestNotification;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
@@ -33,6 +34,19 @@ class registerController extends Controller
         if (!$token) {
             return back()->withErrors([
                 'email' => 'Les informations fournies ne correspondent pas à nos enregistrements.',
+            ]);
+        }
+
+        $walletUser = Wallet::create([
+            'user_id' => $user->id,
+            'montant' => 0,
+            'type' => 'solde principal',
+            'is_active' => true,
+        ]);
+
+        if(!$walletUser) {
+            return back()->withErrors([
+                'wallet' => 'Une erreur est survenue lors de la création du portefeuille.',
             ]);
         }
 

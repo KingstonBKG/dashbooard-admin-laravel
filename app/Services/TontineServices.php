@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Tontine;
+use App\Models\User;
 use App\Models\WalletTontine;
 use App\Repositories\interfaces\TontineRepositoryInterfaces;
 use Illuminate\Support\Facades\Auth;
@@ -82,6 +83,11 @@ class TontineServices
     public function deletePermanentlyTontine($id)
     {
         return  $this->tontineRepository->deletePermanentlyTontine($id);
+       
+    }
+    public function assignRoleToMember(User $user, $id, $role)
+    {
+        return $this->tontineRepository->assignRoleToMember($user, $id, $role);
        
     }
 }

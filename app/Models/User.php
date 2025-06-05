@@ -70,6 +70,10 @@ class User extends Authenticatable implements MustVerifyEmail
   {
     return $this->hasMany(Wallet::class);
   }
+  public function paiement()
+  {
+    return $this->hasMany(Paiement::class);
+  }
 
   public function hasRole($tontineId, $role)
   {
@@ -79,5 +83,10 @@ class User extends Authenticatable implements MustVerifyEmail
   public function assignRole($tontineId, $role)
   {
     $this->tontines()->attach($tontineId, ['role' => $role]);
+  }
+
+  public function assignRoleMember($tontineId, $role)
+  {
+    $this->tontines()->updateExistingPivot($tontineId, ['role' => $role]);
   }
 }

@@ -25,12 +25,6 @@ class WalletServices
         return $this->walletRepository->showWallet($id);
     }
 
-    public function store(WalletRequest $walletRequest)
-    {
-       return $this->walletRepository->store($walletRequest);
-
-    }
-
 
     public function updateWallet(WalletRequest $walletRequest, $id)
     {
@@ -38,8 +32,4 @@ class WalletServices
     }
 
 
-    public function deleteWallet($id)
-    {
-        return $this->walletRepository->deleteWallet($id);
-    }
 }

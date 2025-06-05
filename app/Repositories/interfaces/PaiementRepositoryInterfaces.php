@@ -5,7 +5,7 @@ use App\Http\Requests\PaiementRequest;
 use App\Http\Requests\WalletRequest;
 
 interface PaiementRepositoryInterfaces{
-    public function getPaiements();
-    public function proceedPaiement(PaiementRequest $paiementrequest);
+    public function getPaiements($tontine_id);
+    public function proceedPaiement(array $data);
     public function showPaiement($id);
 }

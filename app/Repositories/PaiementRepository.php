@@ -5,18 +5,29 @@ namespace App\Repositories;
 use App\Http\Requests\InvitationRequest;
 use App\Http\Requests\PaiementRequest;
 use App\Models\Invitation;
+use App\Models\Paiement;
 use App\Repositories\interfaces\PaiementRepositoryInterfaces;
 use Illuminate\Support\Facades\Auth;
 
 class PaiementRepository implements PaiementRepositoryInterfaces
 {
-     public function getPaiements(){
-
-     }
-    public function proceedPaiement(PaiementRequest $paiementrequest){
-
+    public function getPaiements($tontine_id)
+    {
+        return Paiement::with(['tontine', 'utilisateur'])
+            ->where('tontine_id', $tontine_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
-    public function showPaiement($id){
-        
+    public function proceedPaiement(array $data)
+    {
+
+        $paiement = Paiement::create($data);
+
+        return response()->json($paiement, 201);
+    }
+
+    public function showPaiement($id)
+    {
+        return Paiement::with('utilisateur', 'tontine')->findOrFail($id);
     }
 }

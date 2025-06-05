@@ -20,23 +20,10 @@ class WalletRepository implements WalletRepositoryInterfaces
         return Auth::user()->wallets()->findOrFail($id);
     }
 
-    public function store(WalletRequest $walletRequest)
-    {
-        return Auth::user()->wallets()->create($walletRequest->validated());
-    }
-
-
     public function updateWallet(WalletRequest $walletRequest, $id)
     {
         $wallet = Auth::user()->wallets()->findOrFail($id);
         $wallet->update($walletRequest->validated());
         return  response()->json($wallet);
-    }
-
-
-    public function deleteWallet($id)
-    {
-        Auth::user()->wallets()->findOrFail($id)->delete();
-        return response()->json(['message' => 'Wallet supprimé avec succès']);
     }
 }

@@ -46,7 +46,9 @@ $navbarDetached = ($navbarDetached ?? '');
 
           <!-- Place this tag where you want the button to render. -->
           <li class="nav-item lh-1 me-4">
-            <span class="badge bg-label-info">80 000 FCFA</span>
+            <a href="{{ route('account-settings-wallet') }}">
+              <span class="badge bg-label-info">solde principal : {{ number_format(Auth::user()->wallets()->value('montant'), 0,'', ' ') }} FCFA</span>
+            </a>
           </li>
 
           <!-- User -->

@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('wallet_tontines', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('tontine_id')->constrained()->onDelete('cascade');
             $table->decimal('montant', 10, 2)->default(0);
             $table->string('type')->default('principal'); // principal, epargne, etc.

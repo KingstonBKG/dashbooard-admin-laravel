@@ -44,12 +44,22 @@ class TontinePolicy
         return $user->hasRole($tontine->id, 'admin');;
     }
 
+    public function assignrole(User $user, Tontine $tontine): bool
+    {
+        return $user->hasRole($tontine->id, 'admin');;
+    }
+
     /**
      * Determine whether the user can delete the model.
      */
     public function delete(User $user, Tontine $tontine): bool
     {
         return $user->hasRole($tontine->id, 'admin');
+    }
+
+    public function managemoney(User $user, Tontine $tontine): bool
+    {
+        return $user->hasRole($tontine->id, 'caissier');
     }
 
     public function viewNotes(User $user, Tontine $tontine)

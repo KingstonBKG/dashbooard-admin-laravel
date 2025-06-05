@@ -9,6 +9,23 @@ class AnalyticsController extends Controller
 {
   public function index()
   {
-    return view('pages.dashboard.analytics.dashboard-analytics');
+    $calendrier = [
+        [
+            'date' => '2025-06-10',
+            'user' => [
+                'name' => 'Alice',
+                'photo' => asset('storage/avatars/alice.jpg')
+            ]
+        ],
+        [
+            'date' => '2025-06-17',
+            'user' => [
+                'name' => 'Bob',
+                'photo' => asset('storage/avatars/bob.jpg')
+            ]
+        ],
+        // ...
+    ];
+    return view('pages.dashboard.analytics.dashboard-analytics', compact('calendrier'));
   }
 }

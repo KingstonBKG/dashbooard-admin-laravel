@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('paiements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->integer('destinataire_id')->nullable();
             $table->foreignId('tontine_id')->constrained()->onDelete('cascade');
             $table->decimal('montant', 10, 2);
-            $table->timestamp('date');
-            $table->enum('statut', ['valide', 'en_attente'])->default('en_attente');
+            $table->enum('statut', ['valide', 'en_attente', 'echec'])->default('en_attente');
+            $table->enum('moyen', ['orange_money', 'mobile_money', 'bank_card']);
+            $table->enum('type', ['deposit', 'withdraw']);
             $table->timestamps();
         });
     }

@@ -44,4 +44,9 @@ class Tontine extends Model
     {
         return $this->hasMany(WalletTontine::class);
     }
+
+    public function paiement()
+    {
+        return $this->hasMany(Paiement::class);
+    }
 }

@@ -120,7 +120,7 @@ class TontineRepository implements TontineRepositoryInterfaces
     public function assignRoleToMember(User $user, $id, $role)
     {
         $Tontine = Tontine::find($id);
-        $user->assignRole($Tontine->id, $role);
+        $user->assignRoleMember($Tontine->id, $role);
 
         return Response()->json([
             "message" => "Rôle assigné avec succès"

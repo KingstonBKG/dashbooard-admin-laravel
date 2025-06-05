@@ -195,5 +195,10 @@
     </div>
   </div>
   <!--/ Transactions -->
+
+ 
 </div>
+<!--/ Calendrier des paiements -->
+</div>
+
 @endsection

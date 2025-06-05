@@ -18,7 +18,7 @@
                 <div class="col-md-12 col-12">
                     <div class="card-header">
                         <h5 class="mb-1">Vos portefeuilles</h5>
-                        <p class="my-0 card-subtitle">Gérer facilement vos portefeuilles dans {{config('variables.appName')}}</p>
+                        <p class="my-0 card-subtitle">Gérer facilement votre portefeuille dans {{config('variables.appName')}}</p>
                     </div>
 
                     @if ($errors->any())
@@ -31,21 +31,22 @@
                     </div>
                     @endif
 
-                    <div class="card mx-5">
-                        <h5 class="card-header text-end">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#smallModal">
-                                <span class="tf-icons bx bx-plus bx-18px me-2"></span>
-                                Nouveau portefeuille
-                            </button>
-                        </h5>
+                    @if (session()->has('success'))
+                    <div class="alert alert-success alert-dismissible mx-3" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        </button>
+                    </div>
+                    @endif
+
+                    <div class="card mx-5 mb-3">
                         <div class="table-responsive text-nowrap">
                             <table class="table">
-                                <caption class="ms-6">Liste des portefeuilles</caption>
+                                <caption class="ms-6">Votre portefeuile</caption>
                                 <thead>
                                     <tr>
                                         <th>Type</th>
                                         <th>montant</th>
-                                        <th>devise</th>
                                         <th>statut</th>
                                         <th>Crée le </th>
                                         <th>Actions</th>
@@ -58,10 +59,7 @@
                                             {{ $wallet->type }}
                                         </td>
                                         <td>
-                                            {{ $wallet->montant }}
-                                        </td>
-                                        <td>
-                                            {{ $wallet->devise }}
+                                            {{ number_format($wallet->montant, 0,'', ' ')  }} FCFA
                                         </td>
                                         <td>
                                             @if ($wallet->is_active == 1 )
@@ -87,18 +85,14 @@
                                                         <i class="bx bx-plus me-1"></i>
                                                         <span class="m-l-10">Déposer</span>
                                                     </button>
-                                                    
+
                                                     <button class="dropdown-item" type="button" data-bs-toggle="modal"
                                                         data-bs-target="#retrieveWalletModal{{ $wallet->id }}">
                                                         <i class="bx bx-minus me-1"></i>
                                                         <span class="m-l-10">Rétirer</span>
                                                     </button>
 
-                                                    <button class="dropdown-item" type="button" data-bs-toggle="modal"
-                                                        data-bs-target="#deleteWalletModal{{ $wallet->id }}">
-                                                        <i class="bx bx-trash me-1"></i>
-                                                        <span class="m-l-10">Supprimer</span>
-                                                    </button>
+
                                                 </div>
                                             </div>
 
@@ -109,106 +103,6 @@
                             </table>
                         </div>
                     </div>
-
-                    <div class="modal fade" id="smallModal" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-sm" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel2">Nouveau Portefeuille</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <form action="{{ route('wallet.wallet.store') }}" method="post">
-                                    @csrf
-                                    <div class="modal-body">
-                                        <input type="hidden" id="user_id" class="form-control" value="{{ Auth::user()->id }}" name="user_id">
-                                        <div class="row">
-                                            <div class="col mb-6">
-                                                <label for="type" class="form-label">Type</label>
-                                                <input type="text" id="type" class="form-control" placeholder="Epargne, decouverte" name="type">
-                                            </div>
-                                        </div>
-                                        <div class="row g-6">
-                                            <div class="col mb-0">
-                                                <label class="form-label" for="montant">Montant</label>
-                                                <input type="number" class="form-control" id="montant" placeholder="50000" name="montant">
-                                            </div>
-                                            <div class="col mb-0">
-                                                <label for="devise" class="form-label">Devise</label>
-                                                <input id="devise" type="text" class="form-control" name="devise" placeholder="XAF, Euro, Dollar">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="alert alert-info  mx-4">
-                                        <i class="bx bx-info-circle me-1"></i>
-                                        un portefeuille ne peut être supprimé que si son montant est égale à 0. Contactez-nous en cas de besoin. <a href="mailto:test@gmail.com">test@gmail.com</a>
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-outline-secondary mx-2" data-bs-dismiss="modal">Fermer</button>
-                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
-                    <!-- Modal suppression -->
-                    @foreach ($wallets as $wallet)
-                    <div class="modal fade" id="deleteWalletModal{{ $wallet->id }}" tabindex="-1"
-                        aria-labelledby="deleteWalletModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header bg-danger text-white justify-content-between">
-                                    <h5 class="modal-title" id="deleteTontineModalLabel">
-                                        <i class="anticon anticon-exclamation-circle"></i> Confirmation de suppression
-                                    </h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
-                                </div>
-                                <div class="modal-body">
-                                    <div class="d-flex align-items-center mb-4">
-                                        <div class="mr-3">
-                                            <i class="bx bx-trash me-1 text-danger" style="font-size: 2rem;"></i>
-                                        </div>
-                                        <div>
-                                            <h5>Êtes-vous sûr de vouloir supprimer ce portefeuille ?</h5>
-                                            <p class="mb-0">
-                                                <strong>Portefeuille #{{ $wallet->id }}</strong> - <strong>{{ $wallet->type }}</strong>
-
-
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="alert alert-warning">
-                                        <i class="anticon anticon-warning"></i>
-                                        <strong>Attention :</strong> Cette action est irréversible. Toutes les données associées
-                                        (documents, historiques)
-                                        seront définitivement supprimées.
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">
-                                        <i class="bx bx-close me-1"></i> Annuler
-                                    </button>
-                                    <form action="{{ route('wallet.wallet.destroy', $wallet->id) }}" method="POST"
-                                        class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">
-                                            <i class="bx bx-trash me-1"></i> Confirmer
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
 
                     <!-- Modal deposit -->
                     @foreach ($wallets as $wallet)
@@ -223,17 +117,17 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
                                 </div>
-                                <form action="{{ route('wallet.wallet.destroy', $wallet->id) }}" method="POST"
+                                <form action="{{ route('account.settings.wallet.walletupdate', $wallet->id) }}" method="POST"
                                     class="d-inline">
                                     @csrf
-                                    @method('UPDATE')
+                                    <input type="hidden" name="action" value="deposit">
                                     <div class="modal-body">
                                         <div class="row">
-                                                <div class=" mb-6">
-                                                    <label for="type" class="form-label">Montant</label>
-                                                    <input type="number" id="montant" class="form-control" placeholder="min. 1000" name="montant">
-                                                </div>
+                                            <div class=" mb-6">
+                                                <label for="type" class="form-label">Montant</label>
+                                                <input type="number" id="montant" class="form-control" placeholder="min. 1000" name="montant">
                                             </div>
+                                        </div>
 
                                         <div class="alert alert-warning">
                                             <i class="anticon anticon-warning"></i>
@@ -254,6 +148,7 @@
                         </div>
                     </div>
                     @endforeach
+
                     <!-- Modal retrieve -->
                     @foreach ($wallets as $wallet)
                     <div class="modal fade" id="retrieveWalletModal{{ $wallet->id }}" tabindex="-1"
@@ -267,17 +162,17 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
                                 </div>
-                                <form action="{{ route('wallet.wallet.destroy', $wallet->id) }}" method="POST"
+                                <form action="{{ route('account.settings.wallet.walletupdate', $wallet->id) }}" method="POST"
                                     class="d-inline">
                                     @csrf
-                                    @method('UPDATE')
+                                    <input type="hidden" name="action" value="withdraw">
                                     <div class="modal-body">
                                         <div class="row">
-                                                <div class=" mb-6">
-                                                    <label for="type" class="form-label">Montant</label>
-                                                    <input type="number" id="montant" class="form-control" placeholder="min. 1000" name="montant">
-                                                </div>
+                                            <div class=" mb-6">
+                                                <label for="type" class="form-label">Montant</label>
+                                                <input type="number" id="montant" class="form-control" placeholder="min. 1000" name="montant">
                                             </div>
+                                        </div>
 
                                         <div class="alert alert-warning">
                                             <i class="anticon anticon-warning"></i>

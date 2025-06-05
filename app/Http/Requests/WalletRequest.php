@@ -25,7 +25,6 @@ class WalletRequest extends FormRequest
             'user_id' => 'required|integer|exists:users,id',
             'montant' => 'numeric|nullable',
             'type' => 'required|string',
-            'devise' => 'nullable|string',
             'is_active' => 'nullable|boolean',
         ];
     }

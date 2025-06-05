@@ -125,7 +125,7 @@ $isNavbar = false;
     <div class="alert alert-danger alert-dismissible" role="alert">
         <ul>
             @foreach ($errors->all() as $error)
-            <li>{!!  $error  !!}</li>
+            <li>{!! $error !!}</li>
             @endforeach
         </ul>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
@@ -143,7 +143,16 @@ $isNavbar = false;
             <option value="mobile_money">Mobile Money</option>
             <option value="orange_money">Orange Money</option>
         </select>
-        <input type="hidden" name="type" value="deposit">
+
+        <label for="destinataire">Destinataire</label>
+        <select id="destinataire" name="destinataire_id" required class="">
+            <option value="">Sélectionnez un membre</option>
+            @foreach ($membres as $membre)
+            <option value="{{ $membre->id }}">{{ $membre->username }} ({{ $membre->email }})</option>
+            @endforeach
+        </select>
+
+        <input type="hidden" name="type" value="withdraw">
         <label for="montant" class="form-laber">Montant</label>
         <input type="number" id="montant" name="montant" min="1" class="form-control" placeholder="min. 1000 FCFA" required>
         <input type="hidden" name="tontine_id" value="{{request()->route()->parameter('id')}}">
