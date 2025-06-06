@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('description');
             $table->enum('status', ['active', 'completed'])->default('active');
-            $table->integer('current_pot')->default(0);
             $table->integer('contribution_amount');
             $table->enum('contribution_frequency', ['hebdo', 'monthly', 'yearly', 'weekly', 'bi_weekly']); // ex: mensuelle
             $table->integer('max_members');

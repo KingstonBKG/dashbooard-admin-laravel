@@ -30,6 +30,7 @@ class TontineRequest extends FormRequest
             'startDate' => 'required|date',
             'type' => 'required|in:fixed,rotating,voting',
             'status' => 'nullable|in:active,completed',
+            'random_draw' => 'boolean',
             'admin_id' => 'required|exists:users,id'
         ];
     }

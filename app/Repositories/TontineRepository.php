@@ -30,15 +30,14 @@ class TontineRepository implements TontineRepositoryInterfaces
 
         $tontine = Tontine::create($data);
         $user = Auth::user();
-        $this->assignRoleToMember($user, $tontine->id, 'admin');
+        $tontine->membres()->attach($user->id);
+        $tontine->membres()->attach($tontine->admin_id, ['role' => 'admin']);
 
         WalletTontine::create([
             'tontine_id' => $tontine->id,
             'montant' => 0,
             'type' => 'principal',
             'is_active' => true,
-            // 'updated_at' => Carbon::now(),
-            // 'created_at' => Carbon::now(),
         ]);
 
         return $tontine;
@@ -47,7 +46,9 @@ class TontineRepository implements TontineRepositoryInterfaces
     public function updateTontine($id, array $data)
     {
         $tontine = $this->getTontineById($id);
+        $tontine->random_draw = filter_var($data['random_draw'], FILTER_VALIDATE_BOOLEAN);
         $tontine->update($data);
+
         return $tontine;
     }
 
@@ -84,12 +85,26 @@ class TontineRepository implements TontineRepositoryInterfaces
     public function addMemberToTontine($tontineId, $userId, $invitationId)
     {
         $invitation = Invitation::find($invitationId);
-
         $tontine = $this->getTontineById($tontineId);
+        $user = User::findOrFail($userId);
 
-        $invitation->accepter();
+        if ($tontine->random_draw) {
+            $positions = $tontine->membres()->pluck('position')->toArray();
 
-        return $tontine->membres()->attach($userId);
+            do {
+                $position = rand(1, $tontine->max_members);
+            } while (in_array($position, $positions));
+
+            $tontine->membres()->attach($user, ['position' => $position]);
+
+            $invitation->accepter();
+            return true;
+        } else {
+            $position = $tontine->membres()->count() + 1;
+
+            $invitation->accepter();
+            return $tontine->membres()->attach($user, ['position' => $position]);
+        }
     }
 
     public function removeMemberFromTontine($tontineId, $userId)

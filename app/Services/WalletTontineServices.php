@@ -14,9 +14,9 @@ class WalletTontineServices
         $this->walletTontineRepository = $walletTontineRepository;
     }
 
-    public function getWalletTontines()
+    public function getWalletTontines($tontine_id)
     {
-        return $this->walletTontineRepository->getWalletTontines();
+        return $this->walletTontineRepository->getWalletTontines($tontine_id);
     }
 
     public function showWalletTontine($id)

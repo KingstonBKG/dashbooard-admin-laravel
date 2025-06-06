@@ -31,7 +31,7 @@ class Tontine extends Model
 
     public function membres()
     {
-        return $this->belongsToMany(User::class)->withTimestamps();
+        return $this->belongsToMany(User::class)->withTimestamps()->withPivot('position');
     }
 
     public function assignRole($role)

@@ -28,7 +28,7 @@ class TontineController extends Controller
 
 
 
-    public function __construct(TontineServices $tontineServices, InvitationServices $InvitationServicesService, WalletTontineServices $walletTontineServices,PaiementServices $paiementServices)
+    public function __construct(TontineServices $tontineServices, InvitationServices $InvitationServicesService, WalletTontineServices $walletTontineServices, PaiementServices $paiementServices)
     {
         $this->tontineServices = $tontineServices;
         $this->invitationServices = $InvitationServicesService;
@@ -68,6 +68,7 @@ class TontineController extends Controller
 
     public function store(TontineRequest $request)
     {
+        
         $tontine = $this->tontineServices->createTontine($request->validated());
 
         return redirect()->route('tontines-tontines', $tontine->id)
@@ -77,7 +78,7 @@ class TontineController extends Controller
     public function show($id)
     {
         $data = $this->tontineServices->getTontineDetails($id);
-        $tontinewallets = $this->walletTontineServices->getWalletTontines();
+        $tontinewallets = $this->walletTontineServices->getWalletTontines($id);
         $paiements = $this->paiementServices->getPaiements($id);
 
 
@@ -92,6 +93,7 @@ class TontineController extends Controller
 
     public function update(TontineRequest $request, $id)
     {
+
         $this->tontineServices->updateTontine($id, $request->validated());
 
         return redirect()->route('tontines-tontines')
