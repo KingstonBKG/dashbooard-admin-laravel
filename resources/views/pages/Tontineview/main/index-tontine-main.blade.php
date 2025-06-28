@@ -459,6 +459,17 @@ $tontineName = $data['tontine']->name;
             </div>
         </div>
     </div>
+
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Calendrier des bénéficiaires</h5>
+        </div>
+        <div class="card-body">
+            <div id="tontineCalendarChart"></div>
+        </div>
+    </div>
+    <!--/ Expense Overview -->
 </div>
 </div>
 
@@ -690,4 +701,6 @@ $tontineName = $data['tontine']->name;
         font-size: 0.9em;
     }
 </style>
+
+
 @endsection

@@ -13,6 +13,7 @@ use App\Services\InvitationServices;
 use App\Services\PaiementServices;
 use App\Services\TontineServices;
 use App\Services\WalletTontineServices;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -68,7 +69,7 @@ class TontineController extends Controller
 
     public function store(TontineRequest $request)
     {
-        
+
         $tontine = $this->tontineServices->createTontine($request->validated());
 
         return redirect()->route('tontines-tontines', $tontine->id)
@@ -81,8 +82,26 @@ class TontineController extends Controller
         $tontinewallets = $this->walletTontineServices->getWalletTontines($id);
         $paiements = $this->paiementServices->getPaiements($id);
 
+        $tontine = $data['tontine'];
+        $startDate = $tontine->startDate; // ex: '2025-06-01'
+        $frequency = $tontine->contribution_frequency; // 'hebdo', 'monthly', etc.
+        $members = $tontine->membres; // Collection d'utilisateurs (avec photo, nom)
 
-        return view('pages.tontineview.main.index-tontine-main', compact('data', 'tontinewallets', 'paiements'));
+        $calendarEvents = [
+            [
+                'date' => '2025-06-10',
+                'name' => 'Alice',
+                'photo' => asset('storage/avatars/alice.jpg')
+            ],
+            [
+                'date' => '2025-07-10',
+                'name' => 'Bob',
+                'photo' => asset('storage/avatars/bob.jpg')
+            ],
+            // ...
+        ];
+
+        return view('pages.tontineview.main.index-tontine-main', compact('data', 'tontinewallets', 'paiements', 'calendarEvents'));
     }
 
     public function edit($id)
@@ -141,7 +160,6 @@ class TontineController extends Controller
         $this->tontineServices->assignRoleToMember($user, $tontine_id, $role);
 
         return back()->with('message', 'Le rôle à été assigné');
-
     }
 
     public function addMemberToTontine(Request $request)
@@ -162,5 +180,4 @@ class TontineController extends Controller
 
         return view('pages.dashboard.invitations.index-invitations', compact('invitations', 'action'));
     }
-
 }

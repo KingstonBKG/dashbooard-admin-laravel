@@ -35,7 +35,7 @@
       </div>
     </div>
   </div>
-  
+
 
   <!-- Expense Overview -->
   <div class="col-md-6 col-lg-4 order-1 mb-6">
@@ -196,9 +196,8 @@
   </div>
   <!--/ Transactions -->
 
- 
+
 </div>
 <!--/ Calendrier des paiements -->
-</div>
 
 @endsection

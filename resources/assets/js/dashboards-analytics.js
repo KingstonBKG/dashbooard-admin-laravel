@@ -647,4 +647,102 @@
     const weeklyExpenses = new ApexCharts(weeklyExpensesEl, weeklyExpensesConfig);
     weeklyExpenses.render();
   }
+
+  // Calendar 
+  // --------------------------------------------------------------------
+
+
+
+
+  const calendarEvents = [
+    {
+      date: '2025-06-10',
+      name: 'Alice',
+      photo: '/storage/users/VM5TSjXO2MGGHljlIkkQQc4pnNBTUqqDVVfK9Apx.jpg'
+    },
+    {
+      date: '2025-07-10',
+      name: 'Bob',
+      photo: '/storage/users/VM5TSjXO2MGGHljlIkkQQc4pnNBTUqqDVVfK9Apx.jpg'
+    },
+    {
+      date: '2025-06-10',
+      name: 'Alice',
+      photo: '/storage/users/VM5TSjXO2MGGHljlIkkQQc4pnNBTUqqDVVfK9Apx.jpg'
+    },
+    {
+      date: '2025-07-10',
+      name: 'Bob',
+      photo: '/storage/users/VM5TSjXO2MGGHljlIkkQQc4pnNBTUqqDVVfK9Apx.jpg'
+    },
+    {
+      date: '2025-06-10',
+      name: 'Alice',
+      photo: '/storage/users/VM5TSjXO2MGGHljlIkkQQc4pnNBTUqqDVVfK9Apx.jpg'
+    },
+    {
+      date: '2025-07-10',
+      name: 'Bob',
+      photo: '/storage/users/VM5TSjXO2MGGHljlIkkQQc4pnNBTUqqDVVfK9Apx.jpg'
+    },
+  ];
+
+  const events = calendarEvents;
+  const categories = events.map(e => e.date);
+  const images = events.map(e => e.photo);
+
+
+  const Calendar = document.querySelector('#tontineCalendarChart'),
+    CalendarData = {
+      series: [{
+        name: 'Bénéficiaire',
+        data: events.map((e, i) => ({
+          x: e.date,
+          y: 1,
+          custom: e
+        }))
+      }],
+      chart: {
+        type: 'scatter',
+        height: 160,
+        toolbar: { show: true }
+      },
+      xaxis: {
+        categories: categories,
+        tickPlacement: 'on',
+        labels: {
+          rotate: 0,
+          style: {
+            fontSize: '12px'
+          }
+        }
+      },
+      yaxis: { show: false, min: 0, max: 2 },
+      markers: {
+        size: 25,
+        customHTML: function ({ dataPointIndex }) {
+          const e = events[dataPointIndex];
+          return `<img src="${e.photo}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid #7c3aed;">`;
+
+        }
+      },
+      tooltip: {
+        custom: function ({ dataPointIndex }) {
+          const e = events[dataPointIndex];
+          return `<div style="text-align:center;">
+                    <img src="${e.photo}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;"><br>
+          <strong>${e.name}</strong><br>
+          <span>${e.date}</span>
+        </div>`;
+        }
+      },
+    };
+
+  if (typeof Calendar !== undefined && Calendar !== null) {
+    const calendarEl = new ApexCharts(Calendar, CalendarData);
+    calendarEl.render();
+  }
+
+
+
 })();

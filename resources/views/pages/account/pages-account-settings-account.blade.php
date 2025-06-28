@@ -44,7 +44,7 @@
           <!-- Account -->
           <div class="card-body">
             <div class="d-flex align-items-start align-items-sm-center gap-6 pb-4 border-bottom">
-              <img src="/storage/{{old('image', $user->image)}}" alt="user-avatar" class="d-block w-px-100 h-px-100 rounded objet-fit-cover" id="uploadedAvatar" />
+              <img src="/storage/{{old('image', $user->image)}}" alt="user-avatar" class="d-block w-px-100 h-px-100 rounded-pill objet-fit-cover" id="uploadedAvatar" />
               <div class="button-wrapper">
 
                 <label for="image" class="btn btn-primary me-3 mb-4" tabindex="0">
