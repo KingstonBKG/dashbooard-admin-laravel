@@ -49,6 +49,11 @@ class TontinePolicy
         return $user->hasRole($tontine->id, 'admin');;
     }
 
+    public function createWallet(User $user, Tontine $tontine): bool
+    {
+        return $user->hasRole($tontine->id, 'admin');;
+    }
+
     /**
      * Determine whether the user can delete the model.
      */

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\tontiflex\walletTontineController;
+namespace App\Http\Controllers\tontiflex\wallettontine;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WalletTontineRequest;
@@ -17,8 +17,7 @@ class WalletTontineController extends Controller
 
     public function index()
     {
-        $walletTontines = $this->walletTontineServices->getWalletTontines();
-        return view('wallet_tontine.index', compact('walletTontines'));
+        return redirect()->route('tontine-view-main')->with('success', 'portefeuille créé avec succès.');
     }
 
     public function show($id)
@@ -27,15 +26,10 @@ class WalletTontineController extends Controller
         return view('wallet_tontine.show', compact('walletTontine'));
     }
 
-    public function create()
-    {
-        return view('wallet_tontine.create');
-    }
-
     public function store(WalletTontineRequest $request)
     {
         $this->walletTontineServices->store($request);
-        return redirect()->route('wallet-tontine.index')->with('success', 'WalletTontine créé avec succès.');
+        return redirect()->route('tontine-view-main', $request->tontine_id)->with('success', 'portefeuille créé avec succès.');
     }
 
     public function edit($id)

@@ -136,13 +136,6 @@ $isNavbar = false;
 
     <form action="{{ route('paiement.store', request()->route()->parameter('id')) }}" method="POST" autocomplete="off">
         @csrf
-        <label for="moyen">Moyen de paiement</label>
-        <select id="moyen" name="moyen" required class="">
-            <option value="">Sélectionnez un moyen</option>
-            <option value="bank_card">Carte bancaire</option>
-            <option value="mobile_money">Mobile Money</option>
-            <option value="orange_money">Orange Money</option>
-        </select>
         <input type="hidden" name="type" value="deposit">
         <label for="montant" class="form-laber">Montant</label>
         <input type="number" id="montant" name="montant" min="1" class="form-control" placeholder="min. 1000 FCFA" required>

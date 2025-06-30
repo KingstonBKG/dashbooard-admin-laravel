@@ -30,11 +30,46 @@ class PaiementController extends Controller
         return view('pages.paiement.paiement-view');
     }
 
-    public function withdraw()
+    public function withdraw($id)
     {
-        $users = $this->tontineServices->getUserTontines()->first();
-        $membres = $users['membres'];
+        $data = $this->tontineServices->getTontineDetails($id);
+        $tontine = $data['tontine'];
+        $membres = $tontine->membres;
         return view('pages.paiement.withdraw-view', compact('membres'));
+    }
+
+    public function repartir($id)
+    {
+        $tontinewallets = $this->walletTontineServices->getWalletTontines($id);
+        return view('pages.paiement.repartir-view', compact('tontinewallets'));
+    }
+    public function repartirproceed(Request $request)
+    {
+
+        $de = $request->de;
+        $vers = $request->vers;
+        $tontine_id = $request->tontine_id;
+        $montant = $request->montant;
+
+        $walletTontineprevious = WalletTontine::where('tontine_id', $tontine_id)->where('type', $de)->first();
+        $walletTontinenext = WalletTontine::where('tontine_id', $tontine_id)->where('type', $vers)->first();
+
+        if ($walletTontineprevious->montant < $montant) {
+            return back()->withErrors(['wallet' => 'Solde du portefeuille débité insuffisant']);
+        }
+
+        if ($de != $vers && $montant >= 1000) {
+            $walletTontineprevious->montant -= $montant;
+            $walletTontinenext->montant += $montant;
+        } else {
+            return back()->withErrors(['wallet' => 'le portefeuille de depart doit etre different de celui d\'arriver et le montant <=1000fcfa']);
+        }
+
+        $walletTontineprevious->save();
+        $walletTontinenext->save();
+
+        return redirect()->route('tontine-view-main', $tontine_id)
+            ->with('success', 'paiement reussi');
     }
 
     public function store(PaiementRequest $paiementRequest, $id)
@@ -68,7 +103,7 @@ class PaiementController extends Controller
         } else {
             if ($wallet->montant < $dataform['montant']) {
                 return back()->withErrors(['montant' => 'votre solde principal est insuffisant. Veuillez recharger. Solde actuel ' . $wallet->montant . ' FCFA']);
-            }   
+            }
             $wallet->montant -= $dataform['montant'];
             $walletTontine->montant += $dataform['montant'];
             $wallet->save();

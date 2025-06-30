@@ -2,6 +2,7 @@
 $isMenu = false;
 $navbarHideToggle = false;
 $tontineName = $data['tontine']->name;
+$tontine_id = $data['tontine']->id;
 
 @endphp
 
@@ -30,34 +31,25 @@ $tontineName = $data['tontine']->name;
                 <div>
                     <h2 class="welcome-title mb-1">Bienvenue, <span class="fw-bold">{{ Auth::user()->username  }}</span></h2>
                     <div class="d-flex align-items-center gap-3">
+
                         <div class="mini-progress">
-                            <span>Interviews</span>
-                            <div class="mini-bar">
-                                <div class="mini-bar-fill" style="width: 15%"></div>
-                            </div>
-                            <span class="mini-bar-label">15%</span>
+                            <span>Nombre de membres</span>
+
+                            <span class="mini-bar-label"><span class="bg-info-subtle d-inline-block px-1"> {{ $tontinestats['total_members'] }} </span></span>
                         </div>
                         <div class="mini-progress">
-                            <span>Hired</span>
-                            <div class="mini-bar">
-                                <div class="mini-bar-fill" style="width: 15%"></div>
-                            </div>
-                            <span class="mini-bar-label">15%</span>
+                            <span>Contributions</span>
+                            <span class="mini-bar-label"><span class="bg-info-subtle d-inline-block px-1"> {{ $tontinestats['contribution_amount'] }} FCFA</span></span>
                         </div>
                         <div class="mini-progress">
-                            <span>Project Time</span>
-                            <div class="mini-bar">
-                                <div class="mini-bar-fill" style="width: 60%"></div>
-                            </div>
-                            <span class="mini-bar-label">60%</span>
+                            <span>Nb transactions</span>
+                            <span class="mini-bar-label"><span class="bg-info-subtle d-inline-block px-1"> {{ count($paiements) }}</span></span>
                         </div>
                         <div class="mini-progress">
-                            <span>Output</span>
-                            <div class="mini-bar">
-                                <div class="mini-bar-fill" style="width: 10%"></div>
-                            </div>
-                            <span class="mini-bar-label">10%</span>
+                            <span>Fréquence</span>
+                            <span class="mini-bar-label"><span class="bg-info-subtle d-inline-block px-1"> {{ $frequency }}</span></span>
                         </div>
+
                     </div>
                 </div>
                 <div class="dashboard-stats d-flex gap-4">
@@ -73,11 +65,11 @@ $tontineName = $data['tontine']->name;
                             </h2>
 
                             <div id="accordionOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
+                                <div class="accordion-body d-flex gap-1">
                                     <a href="{{ route('paiement-index', $data['tontine']->id) }}" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" data-bs-original-title="<i class='bx bx-money bx-xs' ></i> <span>Envoyez de l'argent</span>">Cotiser</a>
-
                                     @can('managemoney', $data['tontine'])
                                     <a href="{{ route('paiement-withdraw', $data['tontine']->id) }}" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" data-bs-original-title="<i class='bx bx-money bx-xs' ></i> <span>Retirer de l'argent</span>">Retirer</a>
+                                    <a href="{{ route('paiement-repartir', $data['tontine']->id) }}" class="btn btn-info" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" data-bs-original-title="<i class='bx bx-money bx-xs' ></i> <span>repartir de l'argent</span>">Repartir</a>
                                     @endcan
                                 </div>
                             </div>
@@ -97,7 +89,14 @@ $tontineName = $data['tontine']->name;
                                     <div class="list-group">
                                         @foreach ($tontinewallets as $wallets)
                                         <a href="javascript:void(0);" class="list-group-item list-group-item-action">{{ $wallets->type }}: {{ number_format($wallets->montant, 0,'', ' ')  }} FCFA</a>
+
                                         @endforeach
+
+                                        @can('createWallet', $data['tontine'])
+                                        <a href="javascript:void(0);" class="list-group-item list-group-item-action text-center" data-bs-toggle="modal" data-bs-target="#addNewPortefeuille" type="button"> + </a>
+
+                                        @endcan
+
                                     </div>
                                 </div>
                             </div>
@@ -126,10 +125,17 @@ $tontineName = $data['tontine']->name;
                         <div class="flex-grow-1 d-flex align-items-center justify-content-between">
                             <div class="mb-sm-0 mb-2">
                                 <h6 class="mb-0">{{$membres->username}}</h6>
-                                <small>{{$membres->role}}</small>
+                                <small>
+                                    @if($membres->username == $data['tontine']->admin->username)
+
+                                    <span class="fw-bold text-info">Admin</span>
+
+                                    @endif
+                                </small>
                             </div>
 
                             @can('assignrole', $data['tontine'])
+                            @if($membres->username != $data['tontine']->admin->username)
 
                             <div class="dropdown">
                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
@@ -179,6 +185,8 @@ $tontineName = $data['tontine']->name;
 
                                 </div>
                             </div>
+                            @endif
+
                             @endcan
                         </div>
                     </div>
@@ -274,7 +282,14 @@ $tontineName = $data['tontine']->name;
                     <div class="nav-align-top nav-tabs-shadow mb-6">
                         <ul class="nav nav-tabs nav-fill" role="tablist">
                             <li class="nav-item">
-                                <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-justified-home" aria-controls="navs-justified-home" aria-selected="true"><span class="d-none d-sm-block"><i class="tf-icons bx bx-home bx-sm me-1_5 align-text-bottom"></i> Home <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-1_5 pt-50">3</span></span><i class="bx bx-home bx-sm d-sm-none"></i></button>
+                                <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-justified-home" aria-controls="navs-justified-home" aria-selected="true"><span class="d-none d-sm-block"><i class="tf-icons bx bx-edit bx-sm me-1_5 align-text-bottom"></i> Notes
+
+                                        @can('createNotes', $data['tontine'])
+
+                                        <a class="bg-primary d-inline text-white d-inline-block px-2 rounded">+</a>
+
+                                        @endcan
+                                        <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-label-danger ms-1_5 pt-50">3</span></span><i class="bx bx-home bx-sm d-sm-none"></i></button>
                             </li>
                             <li class="nav-item">
                                 <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-justified-profile" aria-controls="navs-justified-profile" aria-selected="false"><span class="d-none d-sm-block"><i class="tf-icons bx bx-user bx-sm me-1_5 align-text-bottom"></i> Profile</span><i class="bx bx-user bx-sm d-sm-none"></i></button>
@@ -285,11 +300,14 @@ $tontineName = $data['tontine']->name;
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="navs-justified-home" role="tabpanel">
+                                @can('createNotes', $data['tontine'])
                                 <p>
                                     Icing pastry pudding oat cake. Lemon drops cotton candy caramels cake caramels sesame snaps powder. Bear
                                     claw
                                     candy topping.
                                 </p>
+                                @endcan
+
                                 <p class="mb-0">
                                     Tootsie roll fruitcake cookie. Dessert topping pie. Jujubes wafer carrot cake jelly. Bonbon jelly-o
                                     jelly-o ice
@@ -332,26 +350,12 @@ $tontineName = $data['tontine']->name;
                                 @foreach ($paiements->take(4) as $paiement)
                                 <li class="d-flex align-items-center mb-6">
                                     <div class="avatar flex-shrink-0 me-3">
-                                        @if ($paiement->moyen == 'orange_money')
-                                        <img src="{{asset('assets/img/icons/unicons/Orange_Money.png')}}" alt="User" class="rounded">
-                                        @elseif($paiement->moyen == 'mobile_money')
-                                        <img src="{{asset('assets/img/icons/unicons/mobile_money.png')}}" alt="User" class="rounded">
-                                        @elseif($paiement->moyen == 'bank_card')
-                                        <img src="{{asset('assets/img/icons/unicons/card.png')}}" alt="User" class="rounded">
-                                        @endif
+                                        <img src="/storage/{{ $paiement->utilisateur->image }}" alt class="w-px-40 h-px-40 rounded-circle">
                                     </div>
+
                                     <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                         <div class="me-2">
                                             <small class="d-block">{{ $paiement['utilisateur']->username }}</small>
-                                            <small class="d-block">
-                                                @if ($paiement->moyen == 'orange_money')
-                                                Orange Money
-                                                @elseif($paiement->moyen == 'mobile_money')
-                                                Mobile Money
-                                                @elseif($paiement->moyen == 'bank_card')
-                                                Carte Bancaire
-                                                @endif
-                                            </small>
                                             <h6 class="fw-normal mb-0">
                                                 @if ($paiement->type == 'deposit')
                                                 Dépot d'argent
@@ -472,6 +476,52 @@ $tontineName = $data['tontine']->name;
     <!--/ Expense Overview -->
 </div>
 </div>
+
+
+
+
+
+
+<!-- modal ajout de portefeuille de tontine -->
+<div class="modal fade" id="addNewPortefeuille" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel4">Nouveau portefeuille de pour {{ $tontineName }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form action="{{ route('create.wallettontine') }}" method="POST">
+                    @csrf
+                    <div class="">
+                        <label for="type" class="form-label">Nom du portefeuille</label>
+                        <input type="text" id="type" name="type"
+                            class="form-control @error('type') is-invalid @enderror"
+                            placeholder="Entrer le nom du portefeuille"
+                            value="{{ old('type') }}">
+
+                        @error('type')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <input type="hidden" name="tontine_id" value="{{ $tontine_id}}">
+
+
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary mx-4" data-bs-dismiss="modal">Annuler</button>
+
+                        <button type="submit" class="btn btn-primary">Créer le portefeuille</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 

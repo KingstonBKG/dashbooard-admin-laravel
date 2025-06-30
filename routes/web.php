@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\tontiflex\user\UserController;
+use App\Http\Controllers\tontiflex\wallettontine\WalletTontineController;
+use App\Http\Controllers\tontiflex\walletTontineController\WalletTontine;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\dashboard\Analytics;
 use App\Http\Controllers\layouts\WithoutMenu;
@@ -53,12 +55,9 @@ use App\Http\Controllers\tontiflex\invitation\InvitationController;
 use App\Http\Controllers\tontiflex\paiement\PaiementController;
 use App\Http\Controllers\tontiflex\settings\SettingsController;
 use App\Http\Controllers\tontiflex\tontine\TontineController;
-use App\Http\Controllers\tontiflex\tontineview\TontineViewController;
 use App\Http\Controllers\tontiflex\wallet\WalletController;
-use App\Http\Controllers\tontiflex\walletTontineController\WalletTontineController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 // Tontiflex
 
@@ -112,6 +111,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::prefix('paiement')->group(function () {
         Route::get('/{id}', [PaiementController::class, 'index'])->name('paiement-index');
         
+        Route::get('/repartir/{id}', [PaiementController::class, 'repartir'])->name('paiement-repartir');
+        Route::post('/repartir/{id}', [PaiementController::class, 'repartirproceed'])->name('paiement.repartir');
         Route::get('/withdraw/{id}', [PaiementController::class, 'withdraw'])->name('paiement-withdraw');
 
         Route::post('/proceed/{id}', [PaiementController::class, 'store'])->name('paiement.store');
@@ -188,7 +189,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     });
 
     Route::prefix('/wallettontine')->group(function () {
-        Route::resource('wallet-tontine', WalletTontineController::class);
+        Route::post('/', [WalletTontineController::class, 'store'])->name('create.wallettontine');
+        Route::get('/', [WalletTontineController::class, 'index'])->name('create.wallettontine');
     });
 });
 

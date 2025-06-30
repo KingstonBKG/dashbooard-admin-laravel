@@ -120,7 +120,12 @@
 
                 @foreach($tontines as $tontine)
                 <tr>
-                    <td><i class="bx bxl-react bx-md text-info me-4"></i> {{ $tontine->name }}</td>
+                    <td>
+                        <a href="{{ route('tontine-view-main', $tontine->id) }}">
+                            <i class="bx bxl-react bx-md text-info me-4"></i> {{ $tontine->name }}
+                    </td>
+
+                    </a>
                     <td>{{ $tontine->contribution_amount }} FCFA</td>
 
                     <td>
@@ -288,8 +293,8 @@
                         </div>
                     </div>
 
-                    
-                     <div class="row mb-4">
+
+                    <div class="row mb-4">
 
                         <div class="col-md-6">
                             <label for="random_draw" class="form-label">Type de tirage</label>
@@ -305,7 +310,7 @@
                         </div>
                     </div>
 
-                    
+
 
                     <input type="hidden" id="admin_id" name="admin_id"
                         class="form-control @error('admin_id') is-invalid @enderror"
@@ -424,16 +429,16 @@
                     </div>
 
                     <div class="col-md-6">
-                            <label for="random_draw" class="form-label">Type de tirage</label>
-                            <select id="random_draw" name="random_draw" class="form-select @error('random_draw') is-invalid @enderror">
-                                <option value="">Sélectionner un tirage</option>
-                                <option value='0' {{ old('random_draw', $tontine->random_draw) == '0' ? 'selected' : '' }}>manuelle</option>
-                                <option value='1' {{ old('random_draw', $tontine->random_draw) == '1' ? 'selected' : '' }}>aleatoire</option>
-                            </select>
-                            @error('random_draw')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                        <label for="random_draw" class="form-label">Type de tirage</label>
+                        <select id="random_draw" name="random_draw" class="form-select @error('random_draw') is-invalid @enderror">
+                            <option value="">Sélectionner un tirage</option>
+                            <option value='0' {{ old('random_draw', $tontine->random_draw) == '0' ? 'selected' : '' }}>manuelle</option>
+                            <option value='1' {{ old('random_draw', $tontine->random_draw) == '1' ? 'selected' : '' }}>aleatoire</option>
+                        </select>
+                        @error('random_draw')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
                     <input type="hidden" id="admin_id" name="admin_id"
                         class="form-control @error('admin_id') is-invalid @enderror"

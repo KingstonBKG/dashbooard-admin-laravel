@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('tontine_id')->constrained()->onDelete('cascade');
             $table->decimal('montant', 10, 2);
             $table->enum('statut', ['valide', 'en_attente', 'echec'])->default('en_attente');
-            $table->enum('moyen', ['orange_money', 'mobile_money', 'bank_card']);
             $table->enum('type', ['deposit', 'withdraw']);
             $table->timestamps();
         });

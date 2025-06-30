@@ -132,23 +132,32 @@ $isNavbar = false;
     </div>
     @endif
 
-    <h2>Paiement</h2>
-    <form action="{{ route('paiement.store', request()->route()->parameter('id')) }}" method="POST" autocomplete="off">
-        @csrf
-        <label for="destinataire">Destinataire</label>
-        <select id="destinataire" name="destinataire_id" required class="">
-            <option value="">Sélectionnez un membre</option>
+    <h2>Repartir</h2>
 
-            @foreach ($membres as $membre)
-            <option value="{{ $membre->id }}">{{ $membre->username }} ({{ $membre->email }})</option>
+    <form action="{{ route('paiement.repartir', request()->route()->parameter('id')) }}" method="POST" autocomplete="off">
+        @csrf
+
+        <label for="de">De</label>
+        <select id="de" name="de" required class="">
+            <option value="">Sélectionnez un portefeuille</option>
+            @foreach ($tontinewallets as $wallet)
+            <option value="{{ $wallet->type }}">{{ $wallet->type }}</option>
             @endforeach
         </select>
 
-        <input type="hidden" name="type" value="withdraw">
+        <label for="vers">Vers</label>
+        <select id="vers" name="vers" required class="">
+            <option value="">Sélectionnez un portefeuille</option>
+            @foreach ($tontinewallets as $wallet)
+            <option value="{{ $wallet->type }}">{{ $wallet->type }}</option>
+            @endforeach
+        </select>
+
         <label for="montant" class="form-laber">Montant</label>
         <input type="number" id="montant" name="montant" min="1" class="form-control" placeholder="min. 1000 FCFA" required>
+        
         <input type="hidden" name="tontine_id" value="{{request()->route()->parameter('id')}}">
-        <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
+
         <button type="submit" class="btn btn-primary w-100">Envoyer</button>
     </form>
 </div>

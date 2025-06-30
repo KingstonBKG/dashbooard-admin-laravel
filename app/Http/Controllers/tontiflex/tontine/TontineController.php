@@ -83,6 +83,7 @@ class TontineController extends Controller
         $paiements = $this->paiementServices->getPaiements($id);
 
         $tontine = $data['tontine'];
+        $tontinestats = $data['stats'];
         $startDate = $tontine->startDate; // ex: '2025-06-01'
         $frequency = $tontine->contribution_frequency; // 'hebdo', 'monthly', etc.
         $members = $tontine->membres; // Collection d'utilisateurs (avec photo, nom)
@@ -101,7 +102,7 @@ class TontineController extends Controller
             // ...
         ];
 
-        return view('pages.tontineview.main.index-tontine-main', compact('data', 'tontinewallets', 'paiements', 'calendarEvents'));
+        return view('pages.tontineview.main.index-tontine-main', compact('data', 'tontinewallets', 'paiements', 'calendarEvents', 'tontinestats', 'frequency'));
     }
 
     public function edit($id)

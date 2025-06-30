@@ -22,7 +22,6 @@ class PaiementRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'moyen' => 'required|in:orange_money,mobile_money,bank_card',
             'statut' => 'nullable|in:valide,en_attente,echec',
             'type' => 'required|in:deposit,withdraw',
             'tontine_id' => 'required|exists:tontines,id',

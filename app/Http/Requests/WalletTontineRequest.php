@@ -11,7 +11,7 @@ class WalletTontineRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,15 @@ class WalletTontineRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'tontine_id' => 'required|integer|exists:tontines,id',
+            'type' => 'required|string',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'tontine_id.required' => 'required|integer|exist:tontine_id,id',
         ];
     }
 }

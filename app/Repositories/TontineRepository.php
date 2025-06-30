@@ -22,6 +22,7 @@ class TontineRepository implements TontineRepositoryInterfaces
 
     public function getTontineById($id)
     {
+        
         return Tontine::with(['admin', 'membres'])->findOrFail($id);
     }
 
