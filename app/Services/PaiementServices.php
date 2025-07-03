@@ -18,6 +18,10 @@ class PaiementServices
     {
         return $this->paiementRepository->getPaiements($id);
     }
+    public function getAllPaiements()
+    {
+        return $this->paiementRepository->getAllPaiements();
+    }
     public function proceedPaiement(array $data) {
         return $this->paiementRepository->proceedPaiement($data);
     }
@@ -26,4 +30,5 @@ class PaiementServices
                 return $this->paiementRepository->showPaiement($id);
 
     }
+    
 }

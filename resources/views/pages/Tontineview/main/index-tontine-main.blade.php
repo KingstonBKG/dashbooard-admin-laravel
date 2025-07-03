@@ -109,10 +109,9 @@ $tontine_id = $data['tontine']->id;
             <div class="col-md-3">
                 <div class="card p-3 mb-4 h-px-250 dashboard-card" id="me">
                     <div class="container-fluid">
-                        <div class="fw-bold text-white">Lora Piterson</div>
-                        <div class="mb-2 text-white">UX/UI Designer</div>
+                        <div class="fw-bold text-white">{{ Auth::user()->username  }}</div>
+                        <div class="mb-2 text-white">Membre de {{ $tontineName }}</div>
                     </div>
-                    <div class="badge rounded-pill bg-warning text-dark">$1,200</div>
                 </div>
                 <div class="card dashboard-card p-4">
                     <small class="text-light fw-medium mb-2">Membres de la tontine</small>
@@ -225,23 +224,11 @@ $tontine_id = $data['tontine']->id;
                         <div class="card dashboard-card h-100">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="fw-bold">Progress</span>
-                                    <span class="text-muted small">6.1h</span>
+                                    <span class="fw-bold">Prochain paiement</span>
+                                    <span class="text-muted small">@</span>
                                 </div>
-                                <div class="progress-chart mb-2">
-                                    <div class="bar-group">
-                                        <div class="bar" style="height: 70%"></div>
-                                        <div class="bar" style="height: 80%"></div>
-                                        <div class="bar" style="height: 55%"></div>
-                                        <div class="bar" style="height: 90%"></div>
-                                        <div class="bar" style="height: 60%"></div>
-                                        <div class="bar" style="height: 75%"></div>
-                                        <div class="bar" style="height: 40%"></div>
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <span class="text-muted small">Work Time</span>
-                                    <span class="badge bg-light text-dark">2.3m</span>
+                                <div>
+
                                 </div>
                             </div>
                         </div>
@@ -250,8 +237,7 @@ $tontine_id = $data['tontine']->id;
                         <div class="card h-100 dashboard-card">
                             <div class="card-header d-flex justify-content-between">
                                 <div class="card-title mb-0">
-                                    <h5 class="mb-1 me-2">Order Statistics</h5>
-                                    <p class="card-subtitle">42.82k Total Sales</p>
+                                    <h5 class="mb-1 me-2">Stats de transactions</h5>
                                 </div>
                                 <div class="dropdown">
                                     <button class="btn text-muted p-0" type="button" id="orederStatistics" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -267,15 +253,14 @@ $tontine_id = $data['tontine']->id;
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-6">
                                     <div class="d-flex flex-column align-items-center gap-1">
-                                        <h3 class="mb-1">8,258</h3>
-                                        <small>Total Orders</small>
+                                        <h3 class="mb-1">{{count($paiements)}}</h3>
+                                        <small>Transactions</small>
                                     </div>
                                     <div id="orderStatisticsChart"></div>
                                 </div>
 
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class=" mt-4">

@@ -9,7 +9,7 @@
       <ul class="nav nav-pills flex-column flex-md-row mb-6">
         <li class="nav-item"><a class="nav-link" href="{{route('account-settings-account')}}"><i class="bx bx-user bx-sm me-1_5"></i> Account</a></li>
         <li class="nav-item"><a class="nav-link" href="{{route('account-settings-notifications')}}"><i class="bx bx-sm bx-bell me-1_5"></i> Notifications</a></li>
-        <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="bx bx-link-alt bx-sm me-1_5"></i> Connections</a></li>
+        <!-- <li class="nav-item"><a class="nav-link active" href="javascript:void(0);"><i class="bx bx-link-alt bx-sm me-1_5"></i> Connections</a></li> -->
         <li class="nav-item"><a class="nav-link" href="{{route('account-settings-wallet')}}"><i class="bx bx-sm bx-money me-1_5"></i> Portefeuille </a></li>
 
       </ul>

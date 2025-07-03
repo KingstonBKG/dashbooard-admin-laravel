@@ -18,6 +18,26 @@ class PaiementRepository implements PaiementRepositoryInterfaces
             ->orderBy('created_at', 'desc')
             ->get();
     }
+
+    public function getAllPaiements()
+    {
+        $paiement = Paiement::with(['tontine', 'utilisateur'])
+            ->where('user_id', Auth::user()->id)
+            ->where('type', 'deposit')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        $recus = Paiement::with(['tontine', 'utilisateur'])
+            ->where('user_id', Auth::user()->id)
+            ->where('type', 'withdraw')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return [
+            $paiement,
+            $recus
+        ];
+    }
+
     public function proceedPaiement(array $data)
     {
 

@@ -50,9 +50,6 @@
                 </tr>
             </thead>
             <tbody>
-
-
-
                 @foreach($invitations as $invitation)
                 <tr>
                     <td>{{ $invitation->expediteur->email }}</td>
